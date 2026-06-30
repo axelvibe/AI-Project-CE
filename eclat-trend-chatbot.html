@@ -93,6 +93,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <script>
+const GROQ_KEY = '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';
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 const M = document.getElementById('msgs');
 const I = document.getElementById('input');
 const S = document.getElementById('send');
@@ -100,68 +104,32 @@ const QR = document.getElementById('qr');
 
 const demoCases = {
   'ECL-2024-001': {
-    name: 'Chidi Okonkwo',
-    type: 'Student Visa (UK)',
-    submitted: '12 Jan 2025',
-    status: 'Processing',
-    stage: 'Visa Application Review',
-    progress: 65,
-    eta: '3–5 weeks',
-    updates: [
-      'Application received — 14 Jan 2025',
-      'Documents verified — 28 Jan 2025',
-      'Biometrics completed — 5 Feb 2025',
-      'Under review by visa officer — 18 Feb 2025'
-    ]
+    name: 'Chidi Okonkwo', type: 'Student Visa (UK)',
+    submitted: '12 Jan 2025', status: 'Processing',
+    stage: 'Visa Application Review', progress: 65, eta: '3–5 weeks',
+    updates: ['Application received — 14 Jan 2025','Documents verified — 28 Jan 2025','Biometrics completed — 5 Feb 2025','Under review by visa officer — 18 Feb 2025']
   },
   'ECL-2024-002': {
-    name: 'Amina Bello',
-    type: 'Work Visa (Canada)',
-    submitted: '20 Oct 2024',
-    status: 'Approved',
-    stage: 'Visa Issued',
-    progress: 100,
-    eta: 'Passport ready for collection',
-    updates: [
-      'Application received — 22 Oct 2024',
-      'Documents verified — 5 Nov 2024',
-      'Employer verification complete — 20 Nov 2024',
-      'Approved — 15 Dec 2024',
-      'Visa stamped — 18 Dec 2024'
-    ]
+    name: 'Amina Bello', type: 'Work Visa (Canada)',
+    submitted: '20 Oct 2024', status: 'Approved',
+    stage: 'Visa Issued', progress: 100, eta: 'Passport ready for collection',
+    updates: ['Application received — 22 Oct 2024','Documents verified — 5 Nov 2024','Employer verification complete — 20 Nov 2024','Approved — 15 Dec 2024','Visa stamped — 18 Dec 2024']
   },
   'ECL-2024-003': {
-    name: 'Emeka Nwosu',
-    type: 'Skilled Migration (Australia)',
-    submitted: '3 Mar 2025',
-    status: 'Additional Documents Required',
-    stage: 'Document Review',
-    progress: 40,
-    eta: 'Awaiting your documents',
-    updates: [
-      'Application received — 5 Mar 2025',
-      'Initial assessment complete — 20 Mar 2025',
-      'Requested: updated bank statements & police clearance — 25 Mar 2025'
-    ]
+    name: 'Emeka Nwosu', type: 'Skilled Migration (Australia)',
+    submitted: '3 Mar 2025', status: 'Additional Documents Required',
+    stage: 'Document Review', progress: 40, eta: 'Awaiting your documents',
+    updates: ['Application received — 5 Mar 2025','Initial assessment complete — 20 Mar 2025','Requested: updated bank statements & police clearance — 25 Mar 2025']
   },
   'ECL-2024-004': {
-    name: 'Folake Adeyemi',
-    type: 'Study Visa (Ireland)',
-    submitted: '8 Feb 2025',
-    status: 'Decision Pending',
-    stage: 'Final Review',
-    progress: 85,
-    eta: '1–2 weeks',
-    updates: [
-      'Application received — 10 Feb 2025',
-      'Documents verified — 22 Feb 2025',
-      'Biometrics completed — 28 Feb 2025',
-      'Under final review — 10 Mar 2025'
-    ]
+    name: 'Folake Adeyemi', type: 'Study Visa (Ireland)',
+    submitted: '8 Feb 2025', status: 'Decision Pending',
+    stage: 'Final Review', progress: 85, eta: '1–2 weeks',
+    updates: ['Application received — 10 Feb 2025','Documents verified — 22 Feb 2025','Biometrics completed — 28 Feb 2025','Under final review — 10 Mar 2025']
   }
 };
 
-let qrActive = false;
+const conv = [];
 
 function addMsg(text, sender, extra) {
   const d = document.createElement('div');
@@ -172,8 +140,7 @@ function addMsg(text, sender, extra) {
   const b = document.createElement('div');
   b.className = 'msg-bubble';
   b.innerHTML = text;
-  d.appendChild(a);
-  d.appendChild(b);
+  d.appendChild(a); d.appendChild(b);
   if (extra) d.appendChild(extra);
   M.appendChild(d);
   M.scrollTop = M.scrollHeight;
@@ -186,21 +153,25 @@ function showTyping(cb) {
   t.id = 'typing';
   M.appendChild(t);
   M.scrollTop = M.scrollHeight;
-  setTimeout(() => { t.remove(); cb(); }, 800 + Math.random() * 600);
+  setTimeout(() => { t.remove(); cb(); }, 600 + Math.random() * 400);
 }
 
 function setQuickReplies(btns) {
   QR.innerHTML = '';
-  qrActive = false;
   if (!btns || btns.length === 0) return;
-  qrActive = true;
   btns.forEach(label => {
     const b = document.createElement('button');
     b.className = 'qr-btn';
     b.textContent = label;
-    b.onclick = () => { I.value = label; if (label.startsWith('ECL-')) { I.value = label; handleSend(); } else { handleSend(); } };
+    b.onclick = () => { I.value = label; handleSend(); };
     QR.appendChild(b);
   });
+}
+
+function escapeHtml(t) {
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
 }
 
 function handleSend() {
@@ -213,137 +184,30 @@ function handleSend() {
   processInput(text);
 }
 
-function escapeHtml(t) {
-  const d = document.createElement('div');
-  d.textContent = t;
-  return d.innerHTML;
-}
-
 function processInput(text) {
-  const lower = text.toLowerCase();
-  if (lower.startsWith('ecl-')) {
-    showTyping(() => lookupCase(text.toUpperCase()));
-  } else if (lower.includes('status') || lower.includes('track') || lower.includes('where is my case') || lower.includes('application progress')) {
-    showTyping(() => botResp('askCaseId'));
-  } else if (lower.includes('study') || lower.includes('student') || lower.includes('school') || lower.includes('university')) {
-    showTyping(() => botResp('study'));
-  } else if (lower.includes('work') || lower.includes('job') || lower.includes('employ') || lower.includes('career')) {
-    showTyping(() => botResp('work'));
-  } else if (lower.includes('relocate') || lower.includes('migrate') || lower.includes('move') || lower.includes('permanent') || lower.includes('pr') || lower.includes('residence')) {
-    showTyping(() => botResp('relocate'));
-  } else if (lower.includes('contact') || lower.includes('speak') || lower.includes('agent') || lower.includes('human') || lower.includes('person')) {
-    showTyping(() => botResp('contact'));
-  } else if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey') || lower.includes('good')) {
-    showTyping(() => botResp('greeting'));
-  } else if (lower.includes('help') || lower.includes('menu') || lower.includes('option') || lower.includes('start')) {
-    showTyping(() => botResp('menu'));
-  } else if (lower.includes('thank')) {
-    showTyping(() => botResp('thanks'));
-  } else {
-    showTyping(() => botResp('fallback'));
+  const idMatch = text.toUpperCase().match(/ECL-\d{4}-\d{3}/);
+  if (idMatch && demoCases[idMatch[0]]) {
+    return lookupCase(idMatch[0]);
   }
-}
-
-function botResp(type) {
-  I.disabled = false; S.disabled = false;
-  switch(type) {
-    case 'greeting':
-      addMsg('Hello! Welcome to <span class="highlight">Eclat Trend</span>. I\'m your Immigration Assistant.<br><br>I can help you with:<br>• <strong>Check Application Status</strong> — See where your case stands<br>• <strong>Study Pathways</strong> — Student visas & school admissions<br>• <strong>Work Pathways</strong> — Work permits & skilled migration<br>• <strong>Relocation</strong> — Permanent residency & moving abroad<br>• <strong>Contact Support</strong> — Speak to a human consultant<br><br>How can I help you today?', 'bot');
-      setQuickReplies(['Check Status', 'Study Pathways', 'Work Pathways', 'Relocation', 'Contact Support']);
-      break;
-    case 'menu':
-      addMsg('Here\'s what I can help with:', 'bot');
-      setQuickReplies(['Check Status', 'Study Pathways', 'Work Pathways', 'Relocation', 'Contact Support']);
-      break;
-    case 'askCaseId':
-      addMsg('I\'d be happy to check your application status!<br><br>Please enter your <span class="highlight">Case ID</span> (e.g., <strong>ECL-2024-001</strong>) and I\'ll pull up your details instantly.', 'bot');
-      setQuickReplies(['ECL-2024-001', 'ECL-2024-002', 'ECL-2024-003', 'ECL-2024-004']);
-      break;
-    case 'study':
-      addMsg(`<span class="highlight">Study Pathways Abroad</span><br><br>We help students pursue education in:<br><br>
-<span class="label label-teal">UK</span> <span class="label label-indigo">Canada</span> <span class="label label-amber">Ireland</span> <span class="label label-teal">Australia</span> <span class="label label-indigo">USA</span><br><br>
-<strong>Our services include:</strong><br>
-• University & course selection<br>
-• Student visa application support<br>
-• Document preparation & verification<br>
-• Scholarship & financial aid guidance<br>
-• Pre-departure orientation<br><br>
-<strong>Popular programs:</strong> Undergraduate, Postgraduate, PhD, Short-term study<br><br>
-Want to check a specific case or start a new application?`, 'bot');
-      setQuickReplies(['Check Status', 'Work Pathways', 'Relocation', 'Contact Support']);
-      break;
-    case 'work':
-      addMsg(`<span class="highlight">Work Pathways Abroad</span><br><br>We facilitate work visas and skilled migration to:<br><br>
-<span class="label label-teal">Canada</span> <span class="label label-indigo">UK</span> <span class="label label-amber">Australia</span> <span class="label label-teal">Germany</span> <span class="label label-indigo">Ireland</span><br><br>
-<strong>Our services include:</strong><br>
-• Work permit & visa applications<br>
-• Skilled migration (Express Entry, Skilled Worker)<br>
-• Employer sponsorship matching<br>
-• Labour market assessment support<br>
-• Credential evaluation guidance<br><br>
-<strong>Popular pathways:</strong> Tier 2, Express Entry, Global Talent, Critical Skills<br><br>
-Would you like to check a status or explore options?`, 'bot');
-      setQuickReplies(['Check Status', 'Study Pathways', 'Relocation', 'Contact Support']);
-      break;
-    case 'relocate':
-      addMsg(`<span class="highlight">Relocation & Permanent Residency</span><br><br>We guide families and professionals through full relocation:<br><br>
-<span class="label label-amber">Family Sponsorship</span> <span class="label label-teal">PR Applications</span> <span class="label label-indigo">Citizenship</span><br><br>
-<strong>Our services include:</strong><br>
-• Permanent residency applications<br>
-• Family & dependent visas<br>
-• Citizenship & naturalisation guidance<br>
-• Pre-arrangement services (housing, schools, banking)<br>
-• Settlement & integration support<br><br>
-<strong>Top destinations:</strong> Canada, Australia, UK, Ireland, New Zealand<br><br>
-Have a case ID or want to speak with a consultant?`, 'bot');
-      setQuickReplies(['Check Status', 'Study Pathways', 'Work Pathways', 'Contact Support']);
-      break;
-    case 'contact':
-      addMsg(`<span class="highlight">Contact Our Team</span><br><br>Our consultants are ready to help with your specific situation.<br><br>
-📧 <strong>Email:</strong> <a href="mailto:support@eclattrend.com" style="color:var(--teal)">support@eclattrend.com</a><br>
-📞 <strong>Phone:</strong> +234 800 ECLAT TREND<br>
-🌐 <strong>Web:</strong> <a href="#" style="color:var(--teal)">eclattrend.com</a><br><br>
-📍 <strong>Office:</strong> Lagos, Nigeria<br><br>
-<em>Response time: within 2 hours during business hours</em><br><br>
-Would you like to check a case status while you wait?`, 'bot');
-      setQuickReplies(['Check Status', 'Back to Menu']);
-      break;
-    case 'thanks':
-      addMsg('You\'re welcome! If you need anything else, just ask. I\'m here to help with your immigration journey. 🌍', 'bot');
-      setQuickReplies(['Check Status', 'Back to Menu', 'Contact Support']);
-      break;
-    case 'fallback':
-      addMsg('I\'m not sure I understood that. Let me help you with these options:', 'bot');
-      setQuickReplies(['Check Status', 'Study Pathways', 'Work Pathways', 'Relocation', 'Contact Support', 'Back to Menu']);
-      break;
-  }
+  callGroq(text);
 }
 
 function lookupCase(id) {
   const c = demoCases[id];
   if (!c) {
-    addMsg('I couldn\'t find a case with ID <strong>' + escapeHtml(id) + '</strong>. Please double-check your Case ID and try again.<br><br>Try one of these demo IDs: <strong>ECL-2024-001</strong> through <strong>ECL-2024-004</strong>.', 'bot');
-    setQuickReplies(['ECL-2024-001', 'ECL-2024-002', 'ECL-2024-003', 'ECL-2024-004']);
+    addMsg('Case not found for <strong>' + escapeHtml(id) + '</strong>. Try: <strong>ECL-2024-001</strong> through <strong>ECL-2024-004</strong>.', 'bot');
+    setQuickReplies(['ECL-2024-001','ECL-2024-002','ECL-2024-003','ECL-2024-004']);
     I.disabled = false; S.disabled = false;
     return;
   }
-
   const pct = c.progress;
-  let color = '#fbbf24';
-  if (pct >= 100) color = '#00c9a7';
-  else if (pct >= 60) color = '#818cf8';
-  else if (pct >= 30) color = '#fbbf24';
-  else color = '#f87171';
+  let color = pct >= 100 ? '#00c9a7' : pct >= 60 ? '#818cf8' : pct >= 30 ? '#fbbf24' : '#f87171';
+  let sb = `<span class="label label-amber">${c.status}</span>`;
+  if (c.status === 'Approved') sb = '<span class="label label-teal">Approved ✓</span>';
+  else if (c.status === 'Additional Documents Required') sb = '<span class="label label-red">Action Needed</span>';
+  else if (c.status === 'Decision Pending') sb = '<span class="label label-indigo">Pending</span>';
 
-  let statusBadge = `<span class="label label-amber">${c.status}</span>`;
-  if (c.status === 'Approved') statusBadge = `<span class="label label-teal">Approved ✓</span>`;
-  else if (c.status === 'Additional Documents Required') statusBadge = `<span class="label label-red">Action Needed</span>`;
-  else if (c.status === 'Decision Pending') statusBadge = `<span class="label label-indigo">Pending</span>`;
-
-  let updatesHtml = c.updates.map(u => `<div style="font-size:13px;color:var(--t2);padding:2px 0">• ${u}</div>`).join('');
-
-  addMsg(`<span class="highlight">Case Found!</span>`, 'bot');
-
+  addMsg('<span class="highlight">Case Found!</span>', 'bot');
   const card = document.createElement('div');
   card.className = 'status-card';
   card.innerHTML = `
@@ -351,29 +215,87 @@ function lookupCase(id) {
     <div class="status-row"><span class="status-label">Case ID</span><span class="status-value">${escapeHtml(id)}</span></div>
     <div class="status-row"><span class="status-label">Category</span><span class="status-value">${escapeHtml(c.type)}</span></div>
     <div class="status-row"><span class="status-label">Submitted</span><span class="status-value">${escapeHtml(c.submitted)}</span></div>
-    <div class="status-row"><span class="status-label">Status</span><span class="status-value">${statusBadge}</span></div>
-    <div class="status-row"><span class="status-label">Current Stage</span><span class="status-value">${escapeHtml(c.stage)}</span></div>
+    <div class="status-row"><span class="status-label">Status</span><span class="status-value">${sb}</span></div>
+    <div class="status-row"><span class="status-label">Stage</span><span class="status-value">${escapeHtml(c.stage)}</span></div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
     <div class="status-row"><span class="status-label">Progress</span><span class="status-value">${pct}%</span></div>
     <div class="status-row"><span class="status-label">Expected</span><span class="status-value">${escapeHtml(c.eta)}</span></div>
     <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
       <div style="font-size:12px;color:var(--t2);font-weight:500;margin-bottom:4px">Timeline</div>
-      ${updatesHtml}
-    </div>
-  `;
+      ${c.updates.map(u => '<div style="font-size:13px;color:var(--t2);padding:2px 0">• ' + u + '</div>').join('')}
+    </div>`;
+  const d = document.createElement('div'); d.className = 'msg bot';
+  const av = document.createElement('div'); av.className = 'msg-avatar'; av.textContent = 'ET';
+  d.appendChild(av); d.appendChild(card); M.appendChild(d); M.scrollTop = M.scrollHeight;
+  addMsg('You can track your case anytime using this Case ID. Need more help?', 'bot');
+  setQuickReplies(['Back to Menu','Contact Support']);
+  I.disabled = false; S.disabled = false;
+}
 
-  const d = document.createElement('div');
-  d.className = 'msg bot';
-  const a = document.createElement('div');
-  a.className = 'msg-avatar';
-  a.textContent = 'ET';
-  d.appendChild(a);
-  d.appendChild(card);
-  M.appendChild(d);
-  M.scrollTop = M.scrollHeight;
+async function callGroq(userText) {
+  const systemPrompt = `You are the Eclat Trend Immigration Assistant, a helpful AI for Eclat Trend — an immigration consultancy serving clients pursuing study, work, and relocation pathways abroad.
 
-  addMsg('You can track your case anytime using this Case ID. For further assistance, feel free to contact our team!', 'bot');
-  setQuickReplies(['Back to Menu', 'Contact Support']);
+CORE CONTEXT:
+- Eclat Trend has seen a surge in applicant volume. 80% of complaints are about lack of timely status updates.
+- Your primary job: answer questions about immigration pathways, provide helpful guidance, and direct users to check their case status.
+- You have access to demo case data via the Case ID system (ECL-2024-001 through ECL-2024-004).
+- You answer in plain, warm, professional English.
+- You NEVER provide legal advice — always add a disclaimer for personalized queries.
+- You are NOT a lawyer. You give general information only.
+
+DEMO CASE DATA (accessible by Case ID):
+- ECL-2024-001: Chidi Okonkwo, Student Visa (UK), Processing (65%), ETA 3-5 weeks
+- ECL-2024-002: Amina Bello, Work Visa (Canada), Approved (100%), Passport ready
+- ECL-2024-003: Emeka Nwosu, Skilled Migration (Australia), Additional Documents Required (40%)
+- ECL-2024-004: Folake Adeyemi, Study Visa (Ireland), Decision Pending (85%), ETA 1-2 weeks
+
+YOUR CAPABILITIES:
+- Answer questions about study, work, and relocation pathways
+- Explain visa processes for UK, Canada, Australia, Ireland, USA, Germany, New Zealand
+- Guide users on how to check application status
+- Provide general information about document requirements
+- Connect users with human support
+
+RULES:
+- Format responses with line breaks and simple formatting for readability
+- Keep responses concise but thorough (2-5 paragraphs max)
+- If someone asks about checking status, remind them they can enter their Case ID (ECL-XXXX-XXX)
+- Be warm, empathetic, and professional
+- Use the Eclat Trend brand tone: modern, supportive, expert
+- IMPORTANT: Format your response as plain text with HTML line breaks (<br>) where appropriate. Do NOT use markdown.`;
+
+  conv.push({ role: 'user', content: userText });
+
+  try {
+    const resp = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + GROQ_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...conv.slice(-10)
+        ],
+        temperature: 0.7,
+        max_tokens: 600
+      })
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('API error: ' + resp.status + ' ' + errText);
+    }
+
+    const data = await resp.json();
+    const reply = data.choices[0].message.content;
+
+    conv.push({ role: 'assistant', content: reply });
+    addMsg(reply, 'bot');
+    setQuickReplies(['Check Status','Study Pathways','Work Pathways','Relocation','Contact Support']);
+  } catch (e) {
+    addMsg('I\'m having trouble connecting right now. Please try again or <strong>contact support</strong> directly.', 'bot');
+    setQuickReplies(['Check Status','Contact Support']);
+  }
   I.disabled = false; S.disabled = false;
 }
 
@@ -381,10 +303,10 @@ I.addEventListener('keydown', e => { if (e.key === 'Enter') handleSend(); });
 S.addEventListener('click', handleSend);
 
 setTimeout(() => {
-  addMsg('Welcome to <span class="highlight">Eclat Trend</span> Immigration Services. I\'m your dedicated assistant, here to help with every step of your journey abroad.', 'bot');
+  addMsg('Welcome to <span class="highlight">Eclat Trend</span> Immigration Services. I\'m your AI-powered assistant, here to help with every step of your journey abroad.', 'bot');
   setTimeout(() => {
-    addMsg('🌍 <strong>Study • Work • Relocate</strong><br><br>I can check your application status instantly. Just drop your Case ID, or explore our pathways below.', 'bot');
-    setQuickReplies(['Check Status', 'Study Pathways', 'Work Pathways', 'Relocation', 'Contact Support']);
+    addMsg('🌍 <strong>Study • Work • Relocate</strong><br><br>I can check your application status instantly, answer questions about visa pathways, or connect you with a human consultant. What can I help you with?', 'bot');
+    setQuickReplies(['Check Status','Study Pathways','Work Pathways','Relocation','Contact Support']);
   }, 600);
 }, 400);
 </script>
