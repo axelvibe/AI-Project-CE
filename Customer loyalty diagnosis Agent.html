@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NorthSouth Coffee · Loyalty Rescue</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#F4EFE6;
+    --paper-2:#EBE3D6;
+    --ink:#241A12;
+    --espresso:#3A2A1D;
+    --muted:#8C7B69;
+    --line:#D9CEBC;
+    --gold:#C0892F;
+    --gold-soft:#E7C98A;
+    --teal:#1E7A5A;
+    --clay:#B5462F;
+    --card:#FBF8F2;
+    --shadow:rgba(40,26,18,.10);
+    --display:'Fraunces',Georgia,'Times New Roman',serif;
+    --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:64px;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* ---------- header ---------- */
+  header{padding:48px 0 28px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold)}
+  h1{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(34px,6vw,60px);line-height:1.02;
+    letter-spacing:-.01em;color:var(--espresso);
+  }
+  h1 em{font-style:italic;color:var(--gold)}
+  .sub{margin-top:18px;max-width:620px;color:var(--muted);font-size:17px}
+
+  /* ---------- problem strip ---------- */
+  .problem{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;margin:36px 0 8px;
+  }
+  .stat{background:var(--card);padding:22px 24px}
+  .stat .n{font-family:var(--display);font-size:38px;font-weight:600;line-height:1;color:var(--clay)}
+  .stat .n.ok{color:var(--teal)}
+  .stat .l{font-size:13px;color:var(--muted);margin-top:8px}
+
+  /* ---------- stamp card signature ---------- */
+  .signature{
+    background:var(--espresso);color:var(--paper);
+    border-radius:16px;padding:30px 30px 26px;margin:40px 0;
+    position:relative;overflow:hidden;
+  }
+  .signature h3{font-family:var(--display);font-weight:500;font-size:20px;margin-bottom:4px}
+  .signature p{color:#C9B7A1;font-size:14px;max-width:560px}
+  .stamps{display:flex;gap:10px;margin:24px 0 6px;flex-wrap:wrap}
+  .stamp{
+    width:52px;height:52px;border-radius:50%;
+    border:2px dashed #6A5642;display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:#6A5642;background:transparent;
+    transition:all .45s cubic-bezier(.4,0,.2,1);position:relative;
+  }
+  .stamp.filled{background:var(--gold);border-color:var(--gold);border-style:solid;color:#3A2A1D}
+  .stamp.reward{border-color:var(--teal);border-style:solid;color:var(--teal)}
+  .stamp.reward.filled{background:var(--teal);color:var(--paper);border-color:var(--teal)}
+  .stamp .tag{
+    position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+    font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    white-space:nowrap;color:var(--gold-soft);font-weight:600;
+  }
+  .stamp.reward .tag{color:#7FD3B5}
+  .cliff{
+    position:absolute;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--clay);font-weight:600;
+  }
+  .sigbtns{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .toggle{
+    font-family:var(--body);font-size:13px;font-weight:500;
+    padding:9px 16px;border-radius:999px;cursor:pointer;
+    border:1px solid #6A5642;background:transparent;color:#C9B7A1;
+    transition:all .2s;
+  }
+  .toggle.active{background:var(--gold);border-color:var(--gold);color:#3A2A1D}
+  .toggle:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
+
+  /* ---------- section heads ---------- */
+  .sec{margin-top:54px}
+  .sec-label{
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin-bottom:6px;
+  }
+  .sec h2{font-family:var(--display);font-weight:500;font-size:28px;color:var(--espresso)}
+  .sec .lead{color:var(--muted);margin-top:8px;max-width:660px;font-size:15px}
+
+  /* ---------- pipeline ---------- */
+  .manager-bar{
+    margin-top:26px;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;
+    cursor:pointer;transition:border-color .2s;
+  }
+  .manager-bar:hover{border-color:var(--gold)}
+  .manager-bar.active{border-color:var(--gold);background:#F1E7D4}
+  .mgr-dot{width:34px;height:34px;border-radius:9px;background:var(--ink);color:var(--paper);
+    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0}
+  .manager-bar .who{font-weight:600;font-size:14px}
+  .manager-bar .role{font-size:12.5px;color:var(--muted)}
+  .mgr-meta{margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+
+  .pipeline{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;
+    position:relative;
+  }
+  .agent{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 16px;cursor:pointer;text-align:left;font-family:var(--body);
+    transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;
+  }
+  .agent:hover{transform:translateY(-3px);box-shadow:0 10px 26px var(--shadow);border-color:var(--gold)}
+  .agent.active{border-color:var(--gold);box-shadow:0 10px 26px var(--shadow)}
+  .agent:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .agent .step{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .agent .nm{font-family:var(--display);font-weight:600;font-size:20px;margin-top:8px;color:var(--espresso)}
+  .agent .rl{font-size:13px;color:var(--ink);margin-top:2px;font-weight:500}
+  .agent .dm{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .agent .arrow{position:absolute;right:-12px;top:50%;transform:translateY(-50%);
+    color:var(--line);font-size:18px;z-index:2}
+  .agent:last-child .arrow{display:none}
+
+  /* ---------- detail panel ---------- */
+  .detail{
+    margin-top:16px;border:1px solid var(--gold);border-radius:16px;
+    background:var(--card);overflow:hidden;
+    max-height:0;opacity:0;transition:max-height .4s ease,opacity .3s ease;
+  }
+  .detail.open{max-height:1400px;opacity:1}
+  .detail-inner{padding:26px 28px}
+  .detail .phil{font-family:var(--display);font-style:italic;font-size:19px;color:var(--gold);
+    border-left:3px solid var(--gold);padding-left:16px;margin-bottom:20px;line-height:1.4}
+  .detail h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    margin:18px 0 8px;font-weight:600}
+  .detail h4:first-of-type{margin-top:0}
+  .detail p{font-size:14.5px;color:var(--ink)}
+  .deliver{background:var(--paper-2);border-radius:12px;padding:18px 20px;margin-top:6px}
+  .deliver .dh{font-weight:600;font-size:13px;color:var(--espresso);margin-bottom:6px;
+    display:flex;align-items:center;gap:8px}
+  .deliver .dh::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--gold)}
+  .deliver ul{margin:0;padding-left:18px}
+  .deliver li{font-size:14px;margin:5px 0;color:var(--ink)}
+  .beliefs{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;
+    padding:6px 13px;font-size:12.5px;color:var(--espresso)}
+  .wont{color:var(--clay);font-size:13.5px;margin-top:4px}
+
+  /* ---------- funnel ---------- */
+  .funnel-card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:28px 30px;margin-top:22px}
+  .funnel-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .funnel-head .ttl{font-family:var(--display);font-size:20px;font-weight:500;color:var(--espresso)}
+  .seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .seg button{font-family:var(--body);font-size:13px;font-weight:500;padding:8px 16px;
+    border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+  .seg button.active{background:var(--espresso);color:var(--paper)}
+  .seg button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+  .funnel{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .frow{display:grid;grid-template-columns:160px 1fr 54px;align-items:center;gap:14px}
+  .frow .fl{font-size:13.5px;color:var(--ink);font-weight:500}
+  .ftrack{background:var(--paper-2);border-radius:8px;height:34px;overflow:hidden}
+  .fbar{height:100%;border-radius:8px;background:var(--gold);
+    width:0;transition:width .8s cubic-bezier(.4,0,.2,1);display:flex;align-items:center}
+  .fbar.drop{background:var(--clay)}
+  .fbar.win{background:var(--teal)}
+  .frow .fv{font-family:var(--display);font-weight:600;font-size:17px;text-align:right;color:var(--espresso)}
+  .funnel-note{margin-top:18px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px}
+
+  /* ---------- verdict ---------- */
+  .verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+  .vcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .vcard .vt{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .vcard.scale .vt{color:var(--teal)}
+  .vcard.pivot .vt{color:var(--gold)}
+  .vcard.kill .vt{color:var(--clay)}
+  .vcard p{font-size:13.5px;color:var(--ink)}
+
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--muted)}
+
+  @media(max-width:760px){
+    .problem{grid-template-columns:1fr}
+    .pipeline{grid-template-columns:1fr 1fr}
+    .agent .arrow{display:none}
+    .verdict{grid-template-columns:1fr}
+    .frow{grid-template-columns:110px 1fr 46px;gap:10px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">NorthSouth Coffee · 5-agent loyalty rescue</div>
+    <h1>Members sign up,<br>claim a free drink,<br>then <em>vanish.</em></h1>
+    <p class="sub">A five-agent AI workflow to diagnose a 40% drop in loyalty engagement across 120 stores, and ship a fix that gets members to a second reward before the habit fades.</p>
+
+    <div class="problem">
+      <div class="stat"><div class="n">-40%</div><div class="l">Loyalty engagement, last 6 months</div></div>
+      <div class="stat"><div class="n ok">healthy</div><div class="l">Sign-up volume (not the problem)</div></div>
+      <div class="stat"><div class="n">~10</div><div class="l">Visits to the second reward (the cliff)</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- signature: stamp card -->
+  <div class="signature">
+    <h3>The first-drink cliff</h3>
+    <p>The signup reward is the only near-term reward. After the free drink, the next prize sits about ten visits away. That gap is where the habit was meant to form, and where it dies instead.</p>
+    <div class="stamps" id="stamps"></div>
+    <div class="sigbtns">
+      <button class="toggle active" id="tCurrent" onclick="setProgram('current')">Current programme</button>
+      <button class="toggle" id="tFixed" onclick="setProgram('fixed')">Redesigned programme</button>
+    </div>
+  </div>
+
+  <!-- pipeline -->
+  <div class="sec">
+    <div class="sec-label">The workflow</div>
+    <h2>Five agents, one pipeline, no overlapping lanes</h2>
+    <p class="lead">The Manager runs a sequential pipeline with one parallel branch: diagnose, design, then build and win-back at the same time. Tap any agent to see who they are and what they deliver for NorthSouth.</p>
+
+    <div class="manager-bar" id="mgrBar" onclick="selectAgent('manager')" tabindex="0" role="button"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectAgent('manager')}">
+      <div class="mgr-dot">CF</div>
+      <div>
+        <div class="who">Cian Fitzgerald · Manager</div>
+        <div class="role">Orchestrates the rescue: sequences the work, holds the quality gates, decides what scales</div>
+      </div>
+      <div class="mgr-meta">Orchestration</div>
+    </div>
+
+    <div class="pipeline" id="pipeline"></div>
+    <div class="detail" id="detail"><div class="detail-inner" id="detailInner"></div></div>
+  </div>
+
+  <!-- funnel -->
+  <div class="sec">
+    <div class="sec-label">The run · projected impact</div>
+    <h2>Where members fall out, and what the fix changes</h2>
+    <p class="lead">Illustrative cohort figures, framed as targets to test against real data, not promises. Switch between the current programme and the redesign.</p>
+
+    <div class="funnel-card">
+      <div class="funnel-head">
+        <div class="ttl">Member retention funnel</div>
+        <div class="seg">
+          <button class="active" id="fCurrent" onclick="setFunnel('current')">Current</button>
+          <button id="fFixed" onclick="setFunnel('fixed')">Redesigned</button>
+        </div>
+      </div>
+      <div class="funnel" id="funnel"></div>
+      <div class="funnel-note" id="funnelNote"></div>
+    </div>
+  </div>
+
+  <!-- verdict -->
+  <div class="sec">
+    <div class="sec-label">The decision rule</div>
+    <h2>Run a 4-week A/B, then scale, pivot, or kill</h2>
+    <p class="lead">Saoirse owns the metrics; Cian owns the call. The burden of proof is on survival, not termination.</p>
+    <div class="verdict">
+      <div class="vcard scale">
+        <div class="vt">Scale</div>
+        <p>Treatment cohort reaches the second reward materially more often and holds higher 90-day retention. Roll out to all 120 stores.</p>
+      </div>
+      <div class="vcard pivot">
+        <div class="vt">Pivot</div>
+        <p>If the friction cut alone explains the gain, lead with one-tap earn and simplify the reward ladder.</p>
+      </div>
+      <div class="vcard kill">
+        <div class="vt">Kill</div>
+        <p>Any single tactic with zero measurable signal after 7 days is dropped. No affection-driven survival.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Built from <strong>agent-persona-template.md</strong> and <strong>five-innovators-spec.md</strong>. Five AI colleagues, designed composites, honest about both. Figures are illustrative targets for testing against NorthSouth's real data, not guaranteed outcomes.
+  </footer>
+
+</div>
+
+<script>
+  // ---------- agent data ----------
+  const AGENTS = {
+    researcher:{
+      step:"Step 1 · Intelligence", name:"Saoirse Mooney", role:"Researcher & Analyst",
+      dm:"Diagnoses why the app dies after the first drink.",
+      phil:"Evidence beats assertion: separate what we know from what we assume.",
+      beliefs:["Specifics beat generalities","Contradictory data is a finding","The reward cliff is the usual suspect","Sources or it did not happen"],
+      wont:"Will not design or build. Cites sources; never fabricates a number.",
+      dtitle:"Diagnosis: a mechanics problem in a marketing costume",
+      deliver:[
+        "The drop sits right after the free drink is redeemed; the second reward is ~10 visits away.",
+        "The free-drink signup offer over-recruits one-time deal-seekers.",
+        "App checkout adds steps versus tapping a card, so there is no reason to use the app at the till.",
+        "Verdict: shorten the path to the second reward, cut friction, and measure with a cohort A/B test."
+      ]
+    },
+    designer:{
+      step:"Step 2 · Solutions", name:"Dara Okonkwo", role:"Designer",
+      dm:"Redesigns the reward mechanics and the app flow.",
+      phil:"Form follows the decision it serves: a reward with no habit attached is just a discount.",
+      beliefs:["The user is the unit of measurement","Early wins build habits","Constraints are gifts","Friction is the silent killer"],
+      wont:"Will not write production code or decide strategy. Designs for the 8am regular, not the awards panel.",
+      dtitle:"The fix: an early second win and one-tap earn",
+      deliver:[
+        "Move the second reward from visit 10 to visit 3, with visible progress on the home screen.",
+        "Add streaks, an occasional surprise reward, and double-progress windows on quiet days.",
+        "One-tap pay and earn via a wallet pass; one-tap reorder of 'your usual'.",
+        "Hand Tomas a spec where reward cadence is configuration, tunable without a release."
+      ]
+    },
+    maker:{
+      step:"Step 3 · Building", name:"Tomas Becker", role:"Maker",
+      dm:"Ships the new loyalty engine behind an A/B test.",
+      phil:"Ship working code or do not ship at all: an unmeasured redesign is a guess in production.",
+      beliefs:["Tests are the spec made executable","Configuration beats code","Measure or do not ship","Secrets in code is a fireable offence"],
+      wont:"Will not redesign without approval or skip tests to ship faster. Builds decisions; does not make them.",
+      dtitle:"The build: configurable engine + clean experiment",
+      deliver:[
+        "Reward rules engine where cadence is data, not code: tune the second-reward distance with no release.",
+        "One-tap pay and earn via wallet pass; progress indicator and 'your usual' reorder.",
+        "Redesign shipped behind an A/B test: old ladder control vs new ladder treatment.",
+        "Clean event tracking for second-reward reach and 90-day app-transaction retention, plus a verify pack."
+      ]
+    },
+    marketer:{
+      step:"Step 3 · Distribution", name:"Aoife Lynch", role:"Marketer",
+      dm:"Wins back lapsed members; repositions the programme.",
+      phil:"Distribution is a product feature, not a phase: design the win-back with the fix, not after it.",
+      beliefs:["One sharp story beats ten generic ones","Positioning beats volume","Use the customer's words","Dignity is non-negotiable"],
+      wont:"Will not touch product code or promise what the product cannot deliver. No fake urgency.",
+      dtitle:"The win-back: reactivate the lapsed, retell the story",
+      deliver:[
+        "Segment first: members who signed up, took the free drink, and lapsed.",
+        "Reposition from 'join and get a free drink' to 'your coffee, faster, and rewarded sooner'.",
+        "Day 0: reactivation granting progress toward the visit-3 reward. Day 3: how close you are. Day 7: 'your usual'.",
+        "One clear call to action per message; success measured by reactivation rate, not opens."
+      ]
+    },
+    manager:{
+      step:"Orchestration", name:"Cian Fitzgerald", role:"Manager",
+      dm:"Sequences the work, holds the gates, decides what scales.",
+      phil:"If I am doing the specialist work, I am not managing: I delegate, gate, and synthesise.",
+      beliefs:["Context is the bottleneck","Diagnosis leads","Contract before work","Quality gates are mandatory","Ship over perfect"],
+      wont:"Will not do the specialist work or declare a win the data does not support.",
+      dtitle:"Orchestration: the pattern and the gates",
+      deliver:[
+        "Pattern: diagnose (Saoirse), then design (Dara), then build (Tomas) and win-back (Aoife) in parallel.",
+        "Gates: evidence before design; unambiguous spec before build; clean tracking before launch.",
+        "Metrics: second-reward reach, 90-day retention, app-attributed revenue, reactivation rate.",
+        "Decide after a 4-week A/B: scale, pivot, or kill."
+      ]
+    }
+  };
+  const ORDER=["researcher","designer","maker","marketer"];
+
+  // ---------- render pipeline ----------
+  const pipeline=document.getElementById('pipeline');
+  ORDER.forEach(key=>{
+    const a=AGENTS[key];
+    const el=document.createElement('button');
+    el.className='agent';el.id='agent-'+key;
+    el.setAttribute('aria-label','View '+a.name+', '+a.role);
+    el.onclick=()=>selectAgent(key);
+    el.innerHTML=`<div class="step">${a.step}</div>
+      <div class="nm">${a.name.split(' ')[0]}</div>
+      <div class="rl">${a.role}</div>
+      <div class="dm">${a.dm}</div>
+      <span class="arrow">&#8594;</span>`;
+    pipeline.appendChild(el);
+  });
+
+  let current=null;
+  const detail=document.getElementById('detail');
+  const detailInner=document.getElementById('detailInner');
+
+  function selectAgent(key){
+    document.querySelectorAll('.agent').forEach(e=>e.classList.remove('active'));
+    document.getElementById('mgrBar').classList.remove('active');
+    if(current===key){current=null;detail.classList.remove('open');return;}
+    current=key;
+    if(key==='manager'){document.getElementById('mgrBar').classList.add('active');}
+    else{document.getElementById('agent-'+key).classList.add('active');}
+    const a=AGENTS[key];
+    detailInner.innerHTML=`
+      <div class="phil">"${a.phil}"</div>
+      <div class="deliver">
+        <div class="dh">${a.dtitle}</div>
+        <ul>${a.deliver.map(d=>`<li>${d}</li>`).join('')}</ul>
+      </div>
+      <h4>Core beliefs</h4>
+      <div class="beliefs">${a.beliefs.map(b=>`<span class="chip">${b}</span>`).join('')}</div>
+      <h4>Where ${a.name.split(' ')[0]} holds the line</h4>
+      <p class="wont">${a.wont}</p>`;
+    detail.classList.add('open');
+    detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  // ---------- stamp card ----------
+  const stampsEl=document.getElementById('stamps');
+  function renderStamps(mode){
+    stampsEl.innerHTML='';
+    for(let i=1;i<=10;i++){
+      const s=document.createElement('div');
+      s.className='stamp';
+      if(mode==='current'){
+        if(i===1){s.classList.add('filled');s.textContent='\u2615';
+          s.innerHTML='\u2615<span class="tag">free drink</span>';}
+        else if(i===10){s.classList.add('reward');s.textContent='\u2605';}
+        else{s.textContent=i;}
+      }else{
+        if(i===1){s.classList.add('filled');s.innerHTML='\u2615';}
+        else if(i<=3){s.classList.add('filled');s.textContent=i;}
+        if(i===3){s.classList.add('reward','filled');
+          s.innerHTML='\u2605<span class="tag">reward 2</span>';}
+        if(i>3&&i<10){s.textContent=i;}
+        if(i===10){s.classList.add('reward');s.textContent='\u2605';}
+      }
+      stampsEl.appendChild(s);
+    }
+  }
+  function setProgram(mode){
+    renderStamps(mode);
+    document.getElementById('tCurrent').classList.toggle('active',mode==='current');
+    document.getElementById('tFixed').classList.toggle('active',mode==='fixed');
+  }
+
+  // ---------- funnel ----------
+  const FUNNEL={
+    current:[
+      {l:"Sign up",v:100,c:""},
+      {l:"Claim free drink",v:88,c:""},
+      {l:"Return 2nd visit",v:46,c:"drop"},
+      {l:"Active at day 90",v:30,c:"drop"}
+    ],
+    fixed:[
+      {l:"Sign up",v:100,c:""},
+      {l:"Claim free drink",v:88,c:""},
+      {l:"Reach reward 2",v:64,c:"win"},
+      {l:"Active at day 90",v:52,c:"win"}
+    ]
+  };
+  const NOTES={
+    current:"Today: roughly 7 in 10 never come back to the app after the free drink. The cliff does its damage between visit 1 and the distant second reward.",
+    fixed:"Target: an early second reward at visit 3 lifts day-90 active members from about 30% toward 52% in the treatment cohort. A hypothesis to test, not a promise."
+  };
+  const funnelEl=document.getElementById('funnel');
+  const noteEl=document.getElementById('funnelNote');
+  function renderFunnel(mode){
+    funnelEl.innerHTML='';
+    FUNNEL[mode].forEach(r=>{
+      const row=document.createElement('div');row.className='frow';
+      row.innerHTML=`<div class="fl">${r.l}</div>
+        <div class="ftrack"><div class="fbar ${r.c}"></div></div>
+        <div class="fv">${r.v}%</div>`;
+      funnelEl.appendChild(row);
+    });
+    noteEl.textContent=NOTES[mode];
+    requestAnimationFrame(()=>{
+      const bars=funnelEl.querySelectorAll('.fbar');
+      FUNNEL[mode].forEach((r,i)=>{bars[i].style.width=r.v+'%';});
+    });
+  }
+  function setFunnel(mode){
+    document.getElementById('fCurrent').classList.toggle('active',mode==='current');
+    document.getElementById('fFixed').classList.toggle('active',mode==='fixed');
+    renderFunnel(mode);
+  }
+
+  // ---------- init ----------
+  renderStamps('current');
+  renderFunnel('current');
+</script>
+</body>
+</html>

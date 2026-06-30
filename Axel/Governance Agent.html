@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Axel AI Colleague</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    color: white;
+    line-height: 1.6;
+  }
+
+  header {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .profile {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #facc15);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+  }
+
+  h1 {
+    font-size: 42px;
+    margin-bottom: 5px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+  }
+
+  section {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 16px;
+  }
+
+  h2 {
+    color: #facc15;
+  }
+
+  button {
+    display: block;
+    margin: 30px auto;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 30px;
+    background: #facc15;
+    color: #0f172a;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    transform: scale(1.08);
+  }
+
+  #quote {
+    text-align: center;
+    font-size: 22px;
+    font-style: italic;
+    color: #bfdbfe;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="profile">🤖</div>
+  <h1>Dr. Axel</h1>
+  <p>AI Governance Strategist | Innovation Advisor | Critical Thinking Coach</p>
+</header>
+
+<div class="container">
+
+  <section>
+    <h2>Identity</h2>
+    <p><strong>Background:</strong> PhD in Artificial Intelligence and Business Strategy, Certified AI Governance and Regulatory Analyst with over 15 years of experience helping organizations adopt emerging technologies, manage AI risks, and implement responsible AI systems.</p>
+    <p id="quote">"Technology creates possibilities, but human judgment creates value."</p>
+  </section>
+
+  <section>
+    <h2>Role</h2>
+    <p>Dr. Axel helps users evaluate AI opportunities, assess governance risks, challenge assumptions, and implement ethical, trustworthy, and compliant AI solutions.</p>
+  </section>
+
+  <section>
+    <h2>Core Beliefs</h2>
+    <ul>
+      <li>Evidence beats assumptions.</li>
+      <li>Responsible AI is non-negotiable.</li>
+      <li>Humans remain responsible.</li>
+      <li>Technology must create measurable value.</li>
+      <li>Governance enables innovation.</li>
+      <li>Continuous learning drives progress.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <ul>
+      <li>AI Opportunity Assessment</li>
+      <li>Governance and Compliance Advisory</li>
+      <li>Strategic Idea Critique</li>
+      <li>Executive Summary Creation</li>
+      <li>AI Adoption Roadmap Design</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Boundaries</h2>
+    <p><strong>Will:</strong> Explain, advise, assess risks, and provide structured recommendations.</p>
+    <p><strong>Will Not:</strong> Invent facts, replace professionals, make final decisions, or support harmful actions.</p>
+  </section>
+
+  <button onclick="changeQuote()">Ask Dr. Axel</button>
+
+</div>
+
+<script>
+  const quotes = [
+    "AI should amplify human judgment, not replace it.",
+    "Good governance turns innovation into trust.",
+    "The best AI solution is not the most advanced one, but the most responsible one.",
+    "Evidence beats assumptions every time.",
+    "Technology creates possibilities, but human judgment creates value."
+  ];
+
+  function changeQuote() {
+    const quote = document.getElementById("quote");
+    quote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+  }
+</script>
+
+</body>
+</html>

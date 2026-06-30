@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ireland Future Skills Academy | Find Your Next Skill</title>
+<meta name="description" content="Explore Ireland's most in-demand vocational skills through practical 90-minute hands-on taster sessions.">
+
+<meta property="og:title" content="Ireland Future Skills Academy">
+<meta property="og:description" content="Try Tomorrow's Most In-Demand Trades Before You Commit">
+<meta property="og:type" content="website">
+<!-- OG IMAGE PLACEHOLDER 1200x630 -->
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ireland Future Skills Academy">
+<meta name="twitter:description" content="Try Tomorrow's Most In-Demand Trades Before You Commit">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E">
+
+<script>
+(function(){
+const saved=localStorage.getItem('theme');
+if(saved==='light'){document.documentElement.classList.add('light')}
+})();
+</script>
+
+<style>
+
+:root{
+--bg:#020a18;
+--bg-grad:linear-gradient(170deg,#020a18,#041028 40%,#06142e 70%,#020a18);
+--surface:rgba(8,24,56,0.85);
+--border:rgba(0,170,255,0.12);
+--text:#d0e0f0;
+--text-bright:#e8f0ff;
+--text-dim:#6888aa;
+--neon:#00aaff;
+--cyan:#00e5ff;
+--green:#00ff88;
+--amber:#ffaa00;
+}
+
+html.light{
+--bg:#f6f8fc;
+--bg-grad:linear-gradient(170deg,#ffffff,#eef5ff,#f6f8fc);
+--surface:rgba(255,255,255,0.92);
+--border:rgba(0,100,200,0.12);
+--text:#233247;
+--text-bright:#08111f;
+--text-dim:#5f7388;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',system-ui,sans-serif;
+font-size:16px;
+line-height:1.65;
+background:var(--bg-grad);
+color:var(--text);
+-webkit-font-smoothing:antialiased;
+overflow-x:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:60px 60px;
+pointer-events:none;
+}
+
+.orb{
+position:fixed;
+width:450px;
+height:450px;
+border-radius:50%;
+filter:blur(120px);
+opacity:.15;
+pointer-events:none;
+}
+
+.orb1{
+background:var(--neon);
+top:-100px;
+left:-100px;
+animation:float1 18s infinite alternate ease-in-out;
+}
+
+.orb2{
+background:var(--green);
+bottom:-120px;
+right:-120px;
+animation:float2 20s infinite alternate ease-in-out;
+}
+
+@keyframes float1{
+from{transform:translate(0,0)}
+to{transform:translate(150px,120px)}
+}
+
+@keyframes float2{
+from{transform:translate(0,0)}
+to{transform:translate(-180px,-100px)}
+}
+
+header{
+position:sticky;
+top:0;
+z-index:999;
+backdrop-filter:blur(20px);
+background:rgba(2,10,24,.65);
+border-bottom:1px solid var(--border);
+}
+
+.light header{
+background:rgba(255,255,255,.8);
+}
+
+.nav{
+max-width:880px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 20px;
+}
+
+.logo{
+font-weight:800;
+color:var(--text-bright);
+}
+
+.toggle{
+cursor:pointer;
+background:none;
+border:1px solid var(--border);
+padding:10px 14px;
+border-radius:12px;
+color:var(--text);
+}
+
+.container{
+max-width:880px;
+margin:auto;
+padding:40px 20px;
+}
+
+.hero{
+text-align:center;
+padding:80px 0;
+}
+
+.hero h1{
+font-size:clamp(2.5rem,6vw,4rem);
+line-height:1.1;
+margin-bottom:20px;
+color:var(--text-bright);
+}
+
+.hero p{
+font-size:1.2rem;
+max-width:700px;
+margin:auto;
+color:var(--text-dim);
+}
+
+.btn{
+display:inline-block;
+margin-top:30px;
+padding:14px 24px;
+background:var(--neon);
+color:white;
+text-decoration:none;
+border-radius:12px;
+font-weight:700;
+}
+
+.card{
+background:var(--surface);
+border:1px solid var(--border);
+border-radius:20px;
+padding:28px;
+margin-bottom:24px;
+}
+
+section{
+margin-bottom:60px;
+}
+
+h2{
+font-size:2rem;
+margin-bottom:20px;
+color:var(--text-bright);
+}
+
+h3{
+margin-bottom:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+ul{
+padding-left:20px;
+}
+
+.stat{
+font-size:2rem;
+font-weight:800;
+color:var(--cyan);
+}
+
+.question{
+display:none;
+}
+
+.question.active{
+display:block;
+}
+
+.options button{
+display:block;
+width:100%;
+margin:10px 0;
+padding:14px;
+border:none;
+border-radius:12px;
+background:var(--surface);
+border:1px solid var(--border);
+color:var(--text);
+cursor:pointer;
+text-align:left;
+}
+
+.options button:hover{
+border-color:var(--neon);
+}
+
+.result{
+display:none;
+margin-top:20px;
+}
+
+footer{
+text-align:center;
+padding:40px 0;
+color:var(--text-dim);
+}
+
+.badge{
+display:inline-block;
+padding:6px 12px;
+border-radius:999px;
+background:rgba(0,170,255,.1);
+margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<header>
+<div class="nav">
+<div class="logo">⚡ Ireland Future Skills Academy</div>
+<button class="toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+</div>
+</header>
+
+<div class="container">
+
+<section class="hero">
+<div class="badge">3 Trades • 3 Sessions • Future-Proof Skills</div>
+<h1>Find Your Next Skill</h1>
+<p>
+Explore Ireland's most in-demand vocational careers through practical 90-minute evening tasters led by working tradespeople.
+</p>
+<a href="#qualifier" class="btn">Take The Skill Matcher</a>
+</section>
+
+<section>
+<h2>Why This Is For You</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Career Changer</h3>
+<p>
+Explore practical careers with strong demand and low automation risk.
+</p>
+</div>
+
+<div class="card">
+<h3>Try Before You Commit</h3>
+<p>
+Experience the trade before investing in a full apprenticeship or qualification.
+</p>
+</div>
+
+<div class="card">
+<h3>Future-Proof Skills</h3>
+<p>
+Learn about careers driven by housing, retrofit and Ireland's energy transition.
+</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>Future Skills Discovery Series</h2>
+
+<div class="card">
+<h3>⚡ The Future Electrician</h3>
+<p>Powering homes, solar, heat pumps and Ireland's energy grid.</p>
+<ul>
+<li>Wire a lighting circuit</li>
+<li>Learn electrical safety</li>
+<li>Explore solar & EV charging</li>
+<li>Meet a working electrician</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>🔥 Heat Pumps & Modern Plumbing</h3>
+<p>The trade driving Ireland's retrofit revolution.</p>
+<ul>
+<li>Pipework fundamentals</li>
+<li>Heating system basics</li>
+<li>Heat pump demonstration</li>
+<li>Real retrofit case study</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>🏠 Retrofit & Insulation Essentials</h3>
+<p>The first step to every energy-efficient home.</p>
+<ul>
+<li>Thermal imaging demo</li>
+<li>Insulation materials workshop</li>
+<li>Heat-loss assessment</li>
+<li>Meet retrofit experts</li>
+</ul>
+</div>
+
+</section>
+
+<section>
+<h2>Why Now?</h2>
+
+<div class="grid">
+
+<div class="card">
+<div class="stat">95k+</div>
+<p>Additional construction workers needed by 2030</p>
+</div>
+
+<div class="card">
+<div class="stat">400k</div>
+<p>Heat pumps targeted for Irish homes</p>
+</div>
+
+<div class="card">
+<div class="stat">€13.8bn</div>
+<p>Electricity grid investment planned</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>Frequently Asked Questions</h2>
+
+<div class="card">
+<h3>Do I need experience?</h3>
+<p>No. These sessions are designed for complete beginners.</p>
+</div>
+
+<div class="card">
+<h3>Will I get certified?</h3>
+<p>No. These are exploration sessions designed to help you decide your next step.</p>
+</div>
+
+<div class="card">
+<h3>Who teaches the sessions?</h3>
+<p>Working tradespeople currently active in their industries.</p>
+</div>
+
+<div class="card">
+<h3>How much does it cost?</h3>
+<p>€39–€49 per session or €99 for the full Future Skills Pass.</p>
+</div>
+
+</section>
+
+<section id="qualifier">
+
+<h2>Is This For You?</h2>
+
+<div class="card">
+
+<div id="q1" class="question active">
+<h3>What interests you most?</h3>
+<div class="options">
+<button onclick="answer('electric')">Technology and systems</button>
+<button onclick="answer('green')">Sustainability and climate</button>
+<button onclick="answer('practical')">Building and fixing things</button>
+</div>
+</div>
+
+<div id="q2" class="question">
+<h3>What matters most?</h3>
+<div class="options">
+<button onclick="answer('electric')">Highest earning potential</button>
+<button onclick="answer('green')">Helping the environment</button>
+<button onclick="answer('practical')">Fast entry into demand</button>
+</div>
+</div>
+
+<div id="q3" class="question">
+<h3>What work style suits you?</h3>
+<div class="options">
+<button onclick="answer('electric')">Technical problem-solving</button>
+<button onclick="answer('green')">Home energy upgrades</button>
+<button onclick="answer('practical')">Hands-on work</button>
+</div>
+</div>
+
+<div id="q4" class="question">
+<h3>What future excites you?</h3>
+<div class="options">
+<button onclick="answer('electric')">Renewable energy</button>
+<button onclick="answer('green')">Smart homes</button>
+<button onclick="answer('practical')">Better housing</button>
+</div>
+</div>
+
+<div id="q5" class="question">
+<h3>Who would you shadow tomorrow?</h3>
+<div class="options">
+<button onclick="answer('electric')">Electrician</button>
+<button onclick="answer('green')">Heat Pump Installer</button>
+<button onclick="answer('practical')">Retrofit Specialist</button>
+</div>
+</div>
+
+<div class="result card" id="result"></div>
+
+</div>
+
+</section>
+
+<footer>
+Ireland Future Skills Academy © 2026
+<br>
+Try Tomorrow's Most In-Demand Trades Before You Commit
+</footer>
+
+</div>
+
+<script>
+
+let current=1;
+
+const scores={
+electric:0,
+green:0,
+practical:0
+};
+
+function answer(type){
+
+scores[type]++;
+
+document.getElementById('q'+current).classList.remove('active');
+
+current++;
+
+if(current<=5){
+document.getElementById('q'+current).classList.add('active');
+}
+else{
+showResult();
+}
+}
+
+function showResult(){
+
+const result=document.getElementById('result');
+
+let winner='electric';
+
+if(scores.green>scores[winner]) winner='green';
+if(scores.practical>scores[winner]) winner='practical';
+
+let html='';
+
+if(winner==='electric'){
+html=`
+<h3>⚡ Future Energy Specialist</h3>
+<p>You are attracted to technology, infrastructure and future energy systems.</p>
+<ol>
+<li>The Future Electrician</li>
+<li>Heat Pumps & Modern Plumbing</li>
+<li>Retrofit & Insulation Essentials</li>
+</ol>
+<a class="btn" href="#">Reserve Your Seat</a>
+`;
+}
+
+if(winner==='green'){
+html=`
+<h3>🌱 Green Economy Builder</h3>
+<p>You are motivated by sustainability and Ireland's energy transition.</p>
+<ol>
+<li>Heat Pumps & Modern Plumbing</li>
+<li>Retrofit & Insulation Essentials</li>
+<li>The Future Electrician</li>
+</ol>
+<a class="btn" href="#">Reserve Your Seat</a>
+`;
+}
+
+if(winner==='practical'){
+html=`
+<h3>🏠 Practical Trade Explorer</h3>
+<p>You enjoy visible, hands-on work and practical problem solving.</p>
+<ol>
+<li>Retrofit & Insulation Essentials</li>
+<li>Heat Pumps & Modern Plumbing</li>
+<li>The Future Electrician</li>
+</ol>
+<a class="btn" href="#">Reserve Your Seat</a>
+`;
+}
+
+result.innerHTML=html;
+result.style.display='block';
+
+}
+
+function toggleTheme(){
+document.documentElement.classList.toggle('light');
+
+if(document.documentElement.classList.contains('light')){
+localStorage.setItem('theme','light');
+}else{
+localStorage.setItem('theme','dark');
+}
+}
+
+</script>
+
+</body>
+</html>

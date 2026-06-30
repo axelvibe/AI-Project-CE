@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NCI Admission Letter Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0a1628; --navy-light: #162240; --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #f5f0e8; --cream-dark: #ede5d5; --green: #2d6a4f; --green-light: #d8f3dc;
+    --red: #9b2226; --red-light: #fde8e8; --text: #1a1a2e; --muted: #6b6b7a;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem 1rem;
+    position: relative; overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 100%, rgba(201,168,76,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  body::after {
+    content: 'NCI';
+    position: fixed; bottom: -4rem; right: -2rem;
+    font-family: 'Playfair Display', serif; font-size: 18rem; font-weight: 700;
+    color: rgba(201,168,76,0.03); pointer-events: none; user-select: none; line-height: 1;
+  }
+  .card {
+    background: var(--cream); border-radius: 20px; width: 100%; max-width: 620px;
+    padding: 2.5rem 2.5rem 2rem; position: relative; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.2);
+    animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  .card::before {
+    content: ''; position: absolute; top:0; left:0; right:0; height:4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  }
+  .header {
+    display:flex; align-items:center; gap:1rem;
+    margin-bottom:1.75rem; padding-bottom:1.25rem;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .logo-badge {
+    width:44px; height:44px; background:var(--navy); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .logo-badge span { font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold); letter-spacing:1px; }
+  .header-text h1 { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--navy); line-height:1.2; }
+  .header-text p { font-size:12px; color:var(--muted); font-weight:300; margin-top:2px; }
+  .progress-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+  .progress-label { font-size:12px; font-weight:500; color:var(--muted); letter-spacing:0.05em; text-transform:uppercase; }
+  .progress-count { font-size:12px; font-weight:500; color:var(--navy); }
+  .progress-track { background:var(--cream-dark); border-radius:99px; height:5px; margin-bottom:1.75rem; }
+  .progress-fill { height:5px; border-radius:99px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); transition:width 0.5s cubic-bezier(0.16,1,0.3,1); }
+  .question-area { animation: fadeQ 0.35s ease; }
+  @keyframes fadeQ { from { opacity:0; transform:translateX(12px); } to { opacity:1; transform:translateX(0); } }
+  .q-number { font-size:11px; font-weight:500; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .q-text { font-family:'Playfair Display',serif; font-size:19px; font-weight:400; color:var(--navy); line-height:1.5; margin-bottom:1.5rem; }
+  .options { display:flex; flex-direction:column; gap:10px; }
+  .opt {
+    background:white; border:1.5px solid var(--cream-dark); border-radius:12px;
+    padding:13px 16px; font-size:14.5px; font-weight:400; color:var(--text);
+    text-align:left; cursor:pointer; transition:border-color 0.15s, background 0.15s, transform 0.1s;
+    display:flex; align-items:center; gap:10px; line-height:1.4; font-family:'DM Sans',sans-serif;
+  }
+  .opt-letter {
+    width:26px; height:26px; border-radius:7px; background:var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:500; color:var(--muted); flex-shrink:0;
+    transition:background 0.15s, color 0.15s;
+  }
+  .opt:hover:not(:disabled) { border-color:var(--gold); transform:translateY(-1px); box-shadow:0 4px 12px rgba(201,168,76,0.15); }
+  .opt:hover:not(:disabled) .opt-letter { background:var(--gold); color:white; }
+  .opt.correct { background:var(--green-light); border-color:var(--green); color:var(--green); }
+  .opt.correct .opt-letter { background:var(--green); color:white; }
+  .opt.wrong { background:var(--red-light); border-color:var(--red); color:var(--red); }
+  .opt.wrong .opt-letter { background:var(--red); color:white; }
+  .opt.reveal { background:var(--green-light); border-color:var(--green); color:var(--green); }
+  .opt.reveal .opt-letter { background:var(--green); color:white; }
+  .opt:disabled { cursor:default; transform:none; box-shadow:none; }
+  .feedback {
+    margin-top:1rem; padding:12px 14px; border-radius:10px;
+    font-size:13.5px; line-height:1.55; display:none; border-left:3px solid;
+  }
+  .feedback.show { display:block; animation:fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .feedback.correct { background:var(--green-light); color:var(--green); border-color:var(--green); }
+  .feedback.wrong { background:var(--red-light); color:var(--red); border-color:var(--red); }
+  .footer-row {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--cream-dark);
+  }
+  .score-pill {
+    display:flex; align-items:center; gap:6px; background:var(--navy); color:var(--gold);
+    border-radius:99px; padding:5px 14px; font-size:13px; font-weight:500;
+  }
+  .next-btn {
+    background:var(--navy); color:var(--gold); border:none; border-radius:10px;
+    padding:10px 22px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:500;
+    cursor:pointer; display:none; transition:background 0.15s, transform 0.1s; letter-spacing:0.02em;
+  }
+  .next-btn.show { display:inline-block; }
+  .next-btn:hover { background:var(--navy-light); transform:translateY(-1px); }
+  .next-btn:active { transform:scale(0.97); }
+  .score-screen { text-align:center; animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
+  .trophy {
+    width:72px; height:72px; background:var(--navy); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem; font-size:32px;
+  }
+  .score-big { font-family:'Playfair Display',serif; font-size:52px; font-weight:700; color:var(--navy); line-height:1; }
+  .score-denom { font-size:22px; color:var(--muted); font-weight:300; }
+  .score-pct { font-size:14px; color:var(--muted); margin-top:4px; margin-bottom:1rem; }
+  .grade-badge { display:inline-block; padding:6px 20px; border-radius:99px; font-size:13px; font-weight:500; margin-bottom:1.5rem; }
+  .grade-a { background:var(--green-light); color:var(--green); }
+  .grade-b { background:#fff8e1; color:#b7791f; }
+  .grade-c { background:var(--red-light); color:var(--red); }
+  .divider { border:none; border-top:1px solid var(--cream-dark); margin:1.25rem 0; }
+  .result-list { text-align:left; }
+  .result-item {
+    display:flex; align-items:flex-start; gap:10px; padding:8px 0;
+    border-bottom:1px solid var(--cream-dark); font-size:13px; color:var(--text); line-height:1.4;
+  }
+  .result-item:last-child { border-bottom:none; }
+  .ri-icon {
+    flex-shrink:0; width:20px; height:20px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; margin-top:1px; font-weight:700;
+  }
+  .ri-icon.c { background:var(--green-light); color:var(--green); }
+  .ri-icon.w { background:var(--red-light); color:var(--red); }
+  .restart-btn {
+    margin-top:1.5rem; background:var(--navy); color:var(--gold); border:none;
+    border-radius:12px; padding:12px 32px; font-size:15px; font-family:'DM Sans',sans-serif;
+    font-weight:500; cursor:pointer; transition:background 0.15s, transform 0.1s; letter-spacing:0.02em;
+  }
+  .restart-btn:hover { background:var(--navy-light); }
+  .restart-btn:active { transform:scale(0.97); }
+  @media (max-width:480px) { .card { padding:1.75rem 1.25rem 1.5rem; } .q-text { font-size:17px; } }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="header">
+    <div class="logo-badge"><span>NCI</span></div>
+    <div class="header-text">
+      <h1>Admission Letter Quiz</h1>
+      <p>MSc AI for Business &mdash; Axel Adewale Ilenre</p>
+    </div>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+const questions = [
+  {
+    q: "What is the full name of the programme Axel was offered a place on?",
+    opts: ["Bachelor of Science in Artificial Intelligence", "Master of Science in AI for Business", "MSc in Data Science and Analytics", "Postgraduate Diploma in Business Technology"],
+    answer: 1,
+    explain: "The offer letter clearly states the programme is the Master of Science in AI for Business at National College of Ireland."
+  },
+  {
+    q: "What is Axel's ILEP Reference Code as stated in the admission letter?",
+    opts: ["0076/0110", "0110/0076", "2416/0873", "NCI/AI/2025"],
+    answer: 1,
+    explain: "The ILEP Reference Code is 0110/0076, as listed in the header details of the admission letter."
+  },
+  {
+    q: "What is the official start date for new international students on this programme?",
+    opts: ["01/09/2025", "15/09/2025", "30/09/2025", "01/10/2025"],
+    answer: 1,
+    explain: "The letter states the start date for new international students is 15/09/2025."
+  },
+  {
+    q: "How long before the start date does NCI strongly recommend students arrive?",
+    opts: ["Two weeks prior", "Three days prior", "At least one week prior", "One month prior"],
+    answer: 2,
+    explain: "The letter explicitly states it is strongly recommended that students arrive at least one week prior to the start date."
+  },
+  {
+    q: "What is the total original tuition fee for the programme before any scholarship is applied?",
+    opts: ["€12,000", "€14,000", "€17,000", "€20,000"],
+    answer: 2,
+    explain: "The total tuition fee listed is €17,000. After the €3,000 scholarship, the amount to pay becomes €14,000."
+  },
+  {
+    q: "What scholarship amount was Axel awarded, and what type of scholarship is it?",
+    opts: ["€5,000 — needs-based scholarship", "€3,000 — academic merit-based scholarship", "€2,000 — early application scholarship", "€3,000 — sports scholarship"],
+    answer: 1,
+    explain: "Axel was awarded an academic merit-based scholarship of €3,000, applied to tuition fees only."
+  },
+  {
+    q: "What is the net tuition fee Axel is required to pay after the scholarship is deducted?",
+    opts: ["€17,000", "€12,000", "€15,000", "€14,000"],
+    answer: 3,
+    explain: "€17,000 minus the €3,000 scholarship equals €14,000 — the Tuition Fee To Pay as listed in the letter."
+  },
+  {
+    q: "When will the scholarship award be applied to Axel's student account?",
+    opts: ["Immediately upon acceptance of the offer", "After the first semester is completed", "Once Axel confirms his place by paying tuition fees in full", "At the start of the second semester"],
+    answer: 2,
+    explain: "The scholarship will be applied once Axel confirms his place by paying the appropriate tuition fees in full."
+  },
+  {
+    q: "On what basis are places allocated for this programme?",
+    opts: ["By academic ranking", "By application submission date", "First come, first served upon receipt of full payment", "By nationality and visa status"],
+    answer: 2,
+    explain: "Places are allocated on a first come, first served basis upon receipt of full payment."
+  },
+  {
+    q: "What is the total course duration and when does it end?",
+    opts: ["2 years, ending November 2027", "1 year (3 semesters), ending 30th November 2026", "18 months, ending March 2027", "1 year (2 semesters), ending June 2026"],
+    answer: 1,
+    explain: "The letter specifies 1 year (3 semesters from September 2025 to 30th November 2026) as the course duration."
+  }
+];
+
+let current = 0, score = 0;
+const userAnswers = [];
+const LETTERS = ['A','B','C','D'];
+
+function render() {
+  const app = document.getElementById('app');
+  if (current >= questions.length) { renderScore(app); return; }
+  const q = questions[current];
+  const pct = (current / questions.length) * 100;
+  app.innerHTML = `
+    <div class="progress-row">
+      <span class="progress-label">Progress</span>
+      <span class="progress-count">${current + 1} / ${questions.length}</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="question-area">
+      <p class="q-number">Question ${current + 1}</p>
+      <p class="q-text">${q.q}</p>
+      <div class="options">
+        ${q.opts.map((o, i) => `
+          <button class="opt" onclick="choose(${i})">
+            <span class="opt-letter">${LETTERS[i]}</span>${o}
+          </button>`).join('')}
+      </div>
+      <div class="feedback" id="fb"></div>
+    </div>
+    <div class="footer-row">
+      <div class="score-pill">&#11088; ${score} pts</div>
+      <button class="next-btn" id="nb" onclick="next()">${current < questions.length - 1 ? 'Next &rarr;' : 'See Results &rarr;'}</button>
+    </div>
+  `;
+}
+
+function choose(idx) {
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt');
+  const fb = document.getElementById('fb');
+  const nb = document.getElementById('nb');
+  btns.forEach(b => b.disabled = true);
+  const correct = idx === q.answer;
+  if (correct) score++;
+  userAnswers.push({ correct, q: q.q });
+  btns[q.answer].classList.add(idx === q.answer ? 'correct' : 'reveal');
+  if (!correct) btns[idx].classList.add('wrong');
+  fb.textContent = (correct ? '✓ Correct! ' : '✗ Not quite. ') + q.explain;
+  fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+  nb.className = 'next-btn show';
+}
+
+function next() { current++; render(); }
+
+function renderScore(app) {
+  const pct = Math.round((score / questions.length) * 100);
+  let gradeClass, gradeText, emoji;
+  if (pct >= 80) { gradeClass='grade-a'; gradeText='Distinction — Excellent!'; emoji='🏆'; }
+  else if (pct >= 60) { gradeClass='grade-b'; gradeText='Merit — Good work'; emoji='📘'; }
+  else { gradeClass='grade-c'; gradeText='Review the letter again'; emoji='📄'; }
+  const items = userAnswers.map((a, i) => `
+    <div class="result-item">
+      <span class="ri-icon ${a.correct?'c':'w'}">${a.correct?'✓':'✗'}</span>
+      <span>${questions[i].q}</span>
+    </div>`).join('');
+  app.innerHTML = `
+    <div class="score-screen">
+      <div class="trophy">${emoji}</div>
+      <p class="score-big">${score}<span class="score-denom">/${questions.length}</span></p>
+      <p class="score-pct">${pct}% correct</p>
+      <span class="grade-badge ${gradeClass}">${gradeText}</span>
+      <hr class="divider">
+      <div class="result-list">${items}</div>
+      <button class="restart-btn" onclick="restart()">&#8635; Retake Quiz</button>
+    </div>
+  `;
+}
+
+function restart() { current=0; score=0; userAnswers.length=0; render(); }
+render();
+</script>
+</body>
+</html>

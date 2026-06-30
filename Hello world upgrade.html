@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hello World — Axel</title>
+<style>
+  body { margin:0; height:100vh; overflow:hidden; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:30px;
+    background:linear-gradient(135deg,#1F2A44,#3a5a8c);
+    transition:background 1s ease; font-family:Arial,sans-serif; }
+  h1 { color:#fff; font-size:3.5rem; margin:0; position:relative;
+    transition:transform .6s ease, color .6s ease; }
+  h1.bounce { animation:bounce 1s ease; color:#FFD166; }
+  h1.flying { position:fixed; top:0; left:0; will-change:transform; transition:none; }
+  @keyframes bounce {
+    0%   { transform:translateY(0)    rotate(0); }
+    25%  { transform:translateY(-40px) rotate(-5deg); }
+    50%  { transform:translateY(0)    rotate(5deg); }
+    75%  { transform:translateY(-20px) rotate(-2deg); }
+    100% { transform:translateY(0)    rotate(0); }
+  }
+  .controls { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; z-index:10; }
+  button { padding:14px 28px; font-size:1rem; font-weight:bold;
+    color:#1F2A44; background:#FFD166; border:none; border-radius:30px;
+    cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
+    box-shadow:0 4px 12px rgba(0,0,0,.25); }
+  button:hover { transform:scale(1.08); box-shadow:0 6px 18px rgba(0,0,0,.35); }
+  button:active { transform:scale(.95); }
+  p { color:#cfd8e6; font-size:.95rem; margin:0; z-index:10; }
+</style>
+</head>
+<body>
+  <h1 id="greeting">Hello, World!</h1>
+  <div class="controls">
+    <button onclick="wave()">Wave at me 👋</button>
+    <button onclick="toggleFly()" id="flyBtn">Set me free 🚀</button>
+  </div>
+  <p id="counter">Click a button to make me move.</p>
+<script>
+  const gradients = [
+    'linear-gradient(135deg,#1F2A44,#3a5a8c)',
+    'linear-gradient(135deg,#7b2cbf,#e63946)',
+    'linear-gradient(135deg,#06d6a0,#118ab2)',
+    'linear-gradient(135deg,#f72585,#ffbe0b)',
+    'linear-gradient(135deg,#0f3460,#16c79a)'
+  ];
+  const h = document.getElementById('greeting');
+  const flyBtn = document.getElementById('flyBtn');
+  let clicks = 0, flying = false, x = 100, y = 100, vx = 4, vy = 3, raf = null;
+
+  function wave() {
+    h.classList.remove('bounce');
+    void h.offsetWidth;
+    h.classList.add('bounce');
+    clicks++;
+    document.getElementById('counter').textContent =
+      `You've waved ${clicks} time${clicks === 1 ? '' : 's'}.`;
+  }
+
+  function toggleFly() {
+    flying = !flying;
+    document.body.style.background = gradients[Math.floor(Math.random() * gradients.length)];
+    if (flying) {
+      flyBtn.textContent = 'Bring me back 🛬';
+      const r = h.getBoundingClientRect();
+      x = r.left; y = r.top;
+      h.classList.add('flying');
+      animate();
+    } else {
+      flyBtn.textContent = 'Set me free 🚀';
+      cancelAnimationFrame(raf);
+      h.classList.remove('flying');
+      h.style.transform = '';
+    }
+  }
+
+  function animate() {
+    const w = h.offsetWidth, ht = h.offsetHeight;
+    x += vx; y += vy;
+    if (x <= 0 || x + w >= window.innerWidth)  vx = -vx;
+    if (y <= 0 || y + ht >= window.innerHeight) vy = -vy;
+    h.style.transform = `translate(${x}px, ${y}px)`;
+    raf = requestAnimationFrame(animate);
+  }
+</script>
+</body>
+</html>

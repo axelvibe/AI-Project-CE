@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eclat Trend — Engagement Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b0e1a;--bg2:#111524;--card:#161b2e;--card2:#1c2238;--card3:#212742;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.16);
+  --t1:#e4eaf4;--t2:#7e8fa8;--t3:#44526a;--t4:#2a3349;
+  --teal:#00c9a7;--teal2:#00a889;--teal-d:rgba(0,201,167,0.1);--teal-d2:rgba(0,201,167,0.18);
+  --indigo:#818cf8;--indigo-d:rgba(129,140,248,0.1);
+  --amber:#fbbf24;--amber-d:rgba(251,191,36,0.1);
+  --red:#f87171;--red2:#ef4444;--red-d:rgba(248,113,113,0.1);
+  --green:#34d399;--green-d:rgba(52,211,153,0.1);
+  --purple:#c084fc;--purple-d:rgba(192,132,252,0.1);
+  --blue:#60a5fa;--blue-d:rgba(96,165,250,0.1);
+  --r:10px;--rs:6px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;font-size:13px;line-height:1.5}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:200;background:rgba(11,14,26,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 24px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-right:4px}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--teal),#0097a7);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;letter-spacing:-0.5px}
+.logo-name{font-size:14px;font-weight:700;color:var(--t1);line-height:1}
+.logo-sub{font-size:10px;color:var(--t3);font-weight:400;letter-spacing:0.03em}
+.hdiv{width:1px;height:24px;background:var(--border2);flex-shrink:0}
+.fg{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.flabel{font-size:10px;color:var(--t3);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
+.pills{display:flex;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:3px;gap:2px}
+.pill{padding:3px 10px;border-radius:5px;font-size:11px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;user-select:none;border:none;background:none;font-family:'Inter',sans-serif;white-space:nowrap}
+.pill:hover{color:var(--t1);background:var(--card2)}
+.pill.active{background:var(--teal);color:#072a22;font-weight:600}
+.hright{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.ts{font-size:11px;color:var(--t3)}
+
+/* MAIN */
+.main{padding:22px 24px 60px;max-width:1640px;margin:0 auto}
+
+/* SECTION */
+.sec{margin-bottom:28px}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-title{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--border)}
+.sec-badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;white-space:nowrap}
+
+/* GRIDS */
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g2-1{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.g1-2{display:grid;grid-template-columns:1fr 2fr;gap:12px}
+.g3-cust{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:12px}
+.g4-cust{display:grid;grid-template-columns:1.2fr 0.8fr 1fr 1fr;gap:12px}
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ct::before{background:linear-gradient(90deg,var(--teal),transparent)}
+.ci::before{background:linear-gradient(90deg,var(--indigo),transparent)}
+.ca::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.cr::before{background:linear-gradient(90deg,var(--red),transparent)}
+.cg::before{background:linear-gradient(90deg,var(--green),transparent)}
+.cp::before{background:linear-gradient(90deg,var(--purple),transparent)}
+.cb::before{background:linear-gradient(90deg,var(--blue),transparent)}
+
+/* KPI */
+.kpi-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.kpi-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.kpi-val{font-size:26px;font-weight:700;color:var(--t1);line-height:1;margin-bottom:6px}
+.kpi-lbl{font-size:10px;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px}
+.kpi-sub{font-size:11px;color:var(--t3)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;padding:2px 6px;border-radius:4px}
+.up{color:var(--green);background:var(--green-d)}
+.down{color:var(--red);background:var(--red-d)}
+
+/* CHART CARD HEADER */
+.ch{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:8px}
+.ct-title{font-size:13px;font-weight:600;color:var(--t1)}
+.ct-sub{font-size:11px;color:var(--t3);margin-top:2px}
+.ctag{font-size:10px;padding:3px 8px;border-radius:99px;font-weight:500;white-space:nowrap;flex-shrink:0}
+
+/* LEGEND */
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ls{width:12px;height:3px;border-radius:2px;flex-shrink:0}
+
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.fstep{display:flex;align-items:center;gap:10px}
+.flbl{font-size:11px;color:var(--t2);width:120px;flex-shrink:0}
+.fbar-wrap{flex:1;height:30px;background:var(--card2);border-radius:5px;overflow:hidden}
+.fbar{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.9);transition:width .7s cubic-bezier(.16,1,.3,1)}
+.fpct{font-size:12px;font-weight:600;width:36px;text-align:right;flex-shrink:0}
+.fdrop{font-size:10px;color:var(--t3);width:44px;text-align:right;flex-shrink:0}
+
+/* MILESTONES */
+.mlist{display:flex;flex-direction:column;gap:11px;margin-top:4px}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.mname{font-size:12px;color:var(--t1);font-weight:500}
+.mpct{font-size:12px;font-weight:600}
+.mtrack{height:5px;background:var(--card2);border-radius:99px;overflow:hidden}
+.mfill{height:100%;border-radius:99px;transition:width .7s cubic-bezier(.16,1,.3,1)}
+.msub{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* HEATMAP */
+.hm-day-row{display:grid;grid-template-columns:32px repeat(7,1fr);gap:2px;margin-bottom:2px}
+.hm-day-lbl{font-size:10px;color:var(--t3);text-align:center}
+.hm-row{display:grid;grid-template-columns:32px repeat(7,1fr);gap:2px;margin-bottom:2px}
+.hm-wk-lbl{font-size:10px;color:var(--t3);display:flex;align-items:center}
+.hm-cell{height:24px;border-radius:4px;cursor:default;transition:opacity .15s;position:relative}
+.hm-cell:hover::after{content:attr(data-tip);position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:var(--card3);border:1px solid var(--border2);border-radius:5px;padding:3px 7px;font-size:10px;color:var(--t1);white-space:nowrap;z-index:10;pointer-events:none}
+
+/* RISK TABLE */
+.rtbl{width:100%;border-collapse:collapse}
+.rtbl th{font-size:10px;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:.05em;padding:0 8px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.rtbl td{padding:9px 8px;font-size:12px;color:var(--t2);border-bottom:1px solid var(--border)}
+.rtbl tr:last-child td{border-bottom:none}
+.rtbl tr:hover td{background:var(--card2)}
+.rscore{display:inline-flex;align-items:center;justify-content:center;width:36px;height:20px;border-radius:4px;font-size:11px;font-weight:600}
+.rh{background:var(--red-d);color:var(--red)}
+.rm{background:var(--amber-d);color:var(--amber)}
+.rl{background:var(--green-d);color:var(--green)}
+.sbadge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
+.sE{background:var(--indigo-d);color:var(--indigo)}
+.sG{background:var(--teal-d);color:var(--teal)}
+.sS{background:var(--amber-d);color:var(--amber)}
+.abtn{font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid var(--border2);background:none;color:var(--t2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.abtn:hover{border-color:var(--teal);color:var(--teal)}
+
+/* AGE-SUB combo stats */
+.combo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.combo-card{background:var(--card2);border-radius:var(--rs);padding:10px;border:1px solid var(--border);text-align:center}
+.combo-val{font-size:18px;font-weight:700;color:var(--t1)}
+.combo-lbl{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+@media(max-width:1200px){.g6{grid-template-columns:repeat(3,1fr)}.g3-cust{grid-template-columns:1fr 1fr}.g4-cust{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.g6{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.g3-cust,.g4-cust,.g2-1,.g1-2,.g2{grid-template-columns:1fr}.span2,.span3{grid-column:span 1}}
+@media(max-width:600px){.hdr{flex-wrap:wrap;height:auto;padding:10px 14px;gap:8px}.main{padding:14px 12px 40px}.g6,.g4{grid-template-columns:1fr 1fr}.flabel{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-icon">ET</div>
+    <div>
+      <div class="logo-name">Eclat Trend</div>
+      <div class="logo-sub">ENGAGEMENT INTELLIGENCE · NGR</div>
+    </div>
+  </div>
+  <div class="hdiv"></div>
+  <div class="fg">
+    <span class="flabel">Period</span>
+    <div class="pills" id="date-pills">
+      <button class="pill" data-val="30">30D</button>
+      <button class="pill active" data-val="90">90D</button>
+      <button class="pill" data-val="180">6M</button>
+      <button class="pill" data-val="365">1Y</button>
+    </div>
+  </div>
+  <div class="hdiv"></div>
+  <div class="fg">
+    <span class="flabel">Segment</span>
+    <div class="pills" id="seg-pills">
+      <button class="pill active" data-val="all">All</button>
+      <button class="pill" data-val="enterprise">Enterprise</button>
+      <button class="pill" data-val="growth">Growth</button>
+      <button class="pill" data-val="starter">Starter</button>
+    </div>
+  </div>
+  <div class="hdiv"></div>
+  <div class="fg">
+    <span class="flabel">Cohort</span>
+    <div class="pills" id="cohort-pills">
+      <button class="pill active" data-val="all">All</button>
+      <button class="pill" data-val="q1_24">Q1 '24</button>
+      <button class="pill" data-val="q2_24">Q2 '24</button>
+      <button class="pill" data-val="q3_24">Q3 '24</button>
+      <button class="pill" data-val="q1_25">Q1 '25</button>
+    </div>
+  </div>
+  <div class="hright">
+    <div class="live"><div class="dot"></div><span>Live</span></div>
+    <span class="ts">Updated 26 May 2025 · 09:41 WAT</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Overview</span>
+      <div class="sec-line"></div>
+      <span class="sec-badge" style="background:var(--teal-d);color:var(--teal)" id="company-tag">TrendPulse Platform · 460 Accounts</span>
+    </div>
+    <div class="g6" id="kpi-grid"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Engagement Metrics</span>
+      <div class="sec-line"></div>
+      <span class="sec-badge" style="background:var(--indigo-d);color:var(--indigo)">4 Signals</span>
+    </div>
+    <div class="g3-cust">
+      <div class="card ct">
+        <div class="ch">
+          <div><div class="ct-title">Customer Churn Rate</div><div class="ct-sub">Monthly churn % trend</div></div>
+          <span class="ctag" style="background:var(--red-d);color:var(--red)" id="churn-tag">—</span>
+        </div>
+        <canvas id="churnChart" height="150"></canvas>
+        <div class="legend" id="churn-leg"></div>
+      </div>
+      <div class="card ci">
+        <div class="ch"><div><div class="ct-title">Engagement Ratio</div><div class="ct-sub">User activity breakdown</div></div></div>
+        <canvas id="donutChart" height="150" style="max-width:180px;margin:0 auto;display:block"></canvas>
+        <div class="legend" id="donut-leg" style="justify-content:center"></div>
+      </div>
+      <div class="card ca">
+        <div class="ch"><div><div class="ct-title">Feature Adoption Rate</div><div class="ct-sub">% of accounts using each feature</div></div></div>
+        <canvas id="featureChart" height="150"></canvas>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="card cb">
+        <div class="ch">
+          <div><div class="ct-title">Avg Session Duration</div><div class="ct-sub">Minutes per session by week, segmented</div></div>
+          <span class="ctag" style="background:var(--blue-d);color:var(--blue)" id="session-tag">—</span>
+        </div>
+        <canvas id="sessionChart" height="85"></canvas>
+        <div class="legend" id="session-leg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Customer Journey</span>
+      <div class="sec-line"></div>
+      <span class="sec-badge" style="background:var(--green-d);color:var(--green)">Activation + Value + Milestones</span>
+    </div>
+    <div class="g4-cust">
+      <div class="card cg span2">
+        <div class="ch">
+          <div><div class="ct-title">Activation Funnel</div><div class="ct-sub">Signup → Feature activation stages</div></div>
+          <span class="ctag" style="background:var(--green-d);color:var(--green)" id="act-tag">—</span>
+        </div>
+        <div id="funnel-wrap"></div>
+      </div>
+      <div class="card ca">
+        <div class="ch"><div><div class="ct-title">Time-to-Value</div><div class="ct-sub">Days to first meaningful outcome</div></div></div>
+        <canvas id="ttvChart" height="160"></canvas>
+      </div>
+      <div class="card cp">
+        <div class="ch"><div><div class="ct-title">Milestone Completion</div><div class="ct-sub">Onboarding checkpoint progress</div></div></div>
+        <div id="milestone-wrap"></div>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="card cg">
+        <div class="ch">
+          <div><div class="ct-title">Account Age vs Subscription Tier</div><div class="ct-sub">Tenure (months) against plan distribution — shows upgrade behaviour over account lifetime</div></div>
+        </div>
+        <div class="combo-grid" id="age-sub-stats"></div>
+        <canvas id="ageSubChart" height="100"></canvas>
+        <div class="legend" id="age-sub-leg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Communication Effectiveness</span>
+      <div class="sec-line"></div>
+      <span class="sec-badge" style="background:var(--amber-d);color:var(--amber)">Email · In-App · Support</span>
+    </div>
+    <div class="g3">
+      <div class="card ct">
+        <div class="ch">
+          <div><div class="ct-title">Email Open &amp; Click Rates</div><div class="ct-sub">Weekly campaign performance</div></div>
+          <span class="ctag" style="background:var(--teal-d);color:var(--teal)" id="email-tag">—</span>
+        </div>
+        <canvas id="emailChart" height="155"></canvas>
+        <div class="legend" id="email-leg"></div>
+      </div>
+      <div class="card ci">
+        <div class="ch">
+          <div><div class="ct-title">In-App Message CTR</div><div class="ct-sub">Click-through by message type</div></div>
+          <span class="ctag" style="background:var(--indigo-d);color:var(--indigo)" id="ctr-tag">—</span>
+        </div>
+        <canvas id="ctrChart" height="155"></canvas>
+        <div class="legend" id="ctr-leg"></div>
+      </div>
+      <div class="card ca">
+        <div class="ch">
+          <div><div class="ct-title">Support Ticket Trends</div><div class="ct-sub">Volume by priority level</div></div>
+          <span class="ctag" style="background:var(--amber-d);color:var(--amber)" id="ticket-tag">—</span>
+        </div>
+        <canvas id="ticketChart" height="155"></canvas>
+        <div class="legend" id="ticket-leg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr">
+      <span class="sec-title">Retention Signals</span>
+      <div class="sec-line"></div>
+      <span class="sec-badge" style="background:var(--red-d);color:var(--red)" id="risk-badge">— at risk</span>
+    </div>
+    <div class="g3">
+      <div class="card ct">
+        <div class="ch"><div><div class="ct-title">Login Frequency Heatmap</div><div class="ct-sub">Sessions per day × last 5 weeks</div></div></div>
+        <div id="heatmap-wrap"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
+          <span style="font-size:10px;color:var(--t3)">Low</span>
+          <div style="display:flex;gap:2px" id="hm-legend"></div>
+          <span style="font-size:10px;color:var(--t3)">High</span>
+        </div>
+      </div>
+      <div class="card cp">
+        <div class="ch"><div><div class="ct-title">Engagement Score Distribution</div><div class="ct-sub">Customers by composite score bucket</div></div></div>
+        <canvas id="engScoreChart" height="175"></canvas>
+      </div>
+      <div class="card cr">
+        <div class="ch">
+          <div><div class="ct-title">At-Risk Customers</div><div class="ct-sub">Churn probability &gt; 65%</div></div>
+          <span class="ctag" style="background:var(--red-d);color:var(--red)" id="risk-count-tag">—</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="rtbl">
+            <thead><tr><th>Account</th><th>Segment</th><th>Risk %</th><th>Last Seen</th><th></th></tr></thead>
+            <tbody id="risk-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+let F = { date:'90', segment:'all', cohort:'all' };
+const CH = {};
+
+Chart.defaults.color = '#44526a';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+
+const TT = {
+  backgroundColor:'#1c2238',borderColor:'rgba(255,255,255,0.12)',
+  borderWidth:1,padding:10,titleColor:'#e4eaf4',bodyColor:'#7e8fa8',
+  cornerRadius:8,boxPadding:4,callbacks:{}
+};
+
+const MONTHS12 = ['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+const WEEKS12  = ['W14','W17','W20','W23','W26','W29','W32','W35','W38','W41','W44','W47'];
+
+function getLabels(type='month') {
+  const n = {30:3,90:6,180:9,365:12}[F.date]||6;
+  return (type==='week'?WEEKS12:MONTHS12).slice(12-n);
+}
+
+const BASE = {
+  churn:{
+    all:     [4.1,3.9,4.4,4.8,4.2,3.8,4.0,4.5,4.7,4.3,4.0,3.8],
+    enterprise:[1.6,1.5,1.9,2.0,1.8,1.5,1.4,1.7,1.9,2.1,1.7,1.5],
+    growth:  [3.8,3.6,4.0,4.4,3.9,3.5,3.7,4.1,4.3,3.9,3.7,3.5],
+    starter: [5.5,5.2,6.0,6.6,5.9,5.4,5.6,6.2,6.5,6.1,5.7,5.3],
+  },
+  session:{
+    enterprise:[38.2,40.1,37.8,41.2,39.5,42.3,38.9,40.8,41.5,39.2,40.6,42.1],
+    growth:    [26.4,27.8,25.9,28.4,27.1,29.2,26.8,27.5,28.9,26.3,27.9,28.6],
+    starter:   [17.2,18.5,16.8,19.1,17.8,20.0,17.5,18.2,19.5,17.0,18.4,19.2],
+  },
+  email:{
+    all:     [28.4,31.2,29.8,33.5,30.1,34.8,29.2,32.6,35.1,31.4,33.8,36.2],
+    enterprise:[41.2,43.8,40.6,45.2,42.4,46.1,41.8,44.3,46.8,43.1,45.6,47.9],
+    growth:  [30.2,32.8,29.4,34.1,31.6,35.4,30.8,33.2,35.9,32.1,34.5,37.0],
+    starter: [22.1,24.6,22.9,26.4,23.8,27.2,23.5,25.9,27.8,24.4,26.1,28.5],
+  },
+  emailClick:{
+    all:     [8.2,9.4,8.8,10.2,9.1,11.0,8.6,9.8,10.8,9.4,10.4,11.6],
+    enterprise:[14.1,15.8,13.9,16.4,15.2,17.1,14.6,15.9,16.9,15.4,16.7,18.1],
+    growth:  [9.2,10.5,9.0,11.2,10.0,11.9,9.7,10.8,11.7,10.3,11.4,12.5],
+    starter: [5.4,6.8,5.9,7.4,6.5,7.9,6.1,7.2,8.0,6.7,7.5,8.6],
+  },
+  ctrTooltip:  [7.2,8.1,7.8,9.2,8.4,10.1,7.9,8.7,9.6,8.3,9.4,10.8],
+  ctrBanner:   [4.1,4.8,4.5,5.4,4.9,5.9,4.6,5.1,5.7,4.8,5.5,6.2],
+  ctrModal:    [11.4,12.6,12.0,13.8,12.9,14.7,12.3,13.2,14.1,12.7,13.8,15.2],
+  tickets:{
+    high:  [12,18,15,22,14,20,16,24,19,17,21,14],
+    medium:[34,42,38,50,37,46,40,54,45,41,48,38],
+    low:   [58,72,64,80,61,74,67,84,72,68,76,62],
+  },
+};
+
+const COHORT_MULT = {all:1,q1_24:0.96,q2_24:1.04,q3_24:0.98,q1_25:1.02};
+
+function sliceSeries(arr) {
+  const n = {30:3,90:6,180:9,365:12}[F.date]||6;
+  return arr.slice(12-n).map(v=>+(v*(COHORT_MULT[F.cohort]||1)).toFixed(1));
+}
+
+function getKPIData() {
+  const m = {
+    all:        {cust:460,churn:4.2,sess:24.5,eng:72,mrr:'₦184M',risk:23},
+    enterprise: {cust:45, churn:1.7,sess:40.2,eng:88,mrr:'₦89M', risk:3},
+    growth:     {cust:128,churn:3.8,sess:27.4,eng:74,mrr:'₦62M', risk:8},
+    starter:    {cust:287,churn:5.9,sess:18.1,eng:61,mrr:'₦33M', risk:12},
+  };
+  return m[F.segment]||m.all;
+}
+
+function renderKPIs() {
+  const d = getKPIData();
+  const items = [
+    {lbl:'Total Accounts',  val:d.cust,      unit:'',     icon:'👥',color:'teal', delta:'+12',   dir:'up',  sub:'vs prev period'},
+    {lbl:'Churn Rate',      val:d.churn+'%', unit:'',     icon:'📉',color:'red',  delta:'-0.4pp',dir:'up',  sub:'month-on-month'},
+    {lbl:'Avg Session',     val:d.sess+'m',  unit:'',     icon:'⏱', color:'blue', delta:'+2.1m', dir:'up',  sub:'per active user'},
+    {lbl:'Engagement Score',val:d.eng,       unit:'/100', icon:'⚡', color:'green',delta:'+3',    dir:'up',  sub:'composite metric'},
+    {lbl:'Monthly Revenue', val:d.mrr,       unit:'',     icon:'💰',color:'amber',delta:'+8.4%', dir:'up',  sub:'recurring revenue'},
+    {lbl:'At-Risk Accounts',val:d.risk,      unit:'',     icon:'⚠️',color:'red',  delta:'+2',    dir:'down',sub:'churn prob >65%'},
+  ];
+  const bgMap={teal:'var(--teal-d)',red:'var(--red-d)',blue:'var(--blue-d)',green:'var(--green-d)',amber:'var(--amber-d)'};
+  document.getElementById('kpi-grid').innerHTML=items.map(it=>`
+    <div class="card c${it.color[0]}">
+      <div class="kpi-row">
+        <div class="kpi-icon" style="background:${bgMap[it.color]}">${it.icon}</div>
+        <span class="delta ${it.dir==='up'?'up':'down'}">${it.dir==='up'?'▲':'▼'} ${it.delta}</span>
+      </div>
+      <div class="kpi-lbl">${it.lbl}</div>
+      <div class="kpi-val">${it.val}<span style="font-size:13px;font-weight:400;color:var(--t3)">${it.unit}</span></div>
+      <div class="kpi-sub">${it.sub}</div>
+    </div>`).join('');
+}
+
+function initChurnChart() {
+  const seg=F.segment;
+  const main=seg==='all'?BASE.churn.all:BASE.churn[seg]||BASE.churn.all;
+  const target=main.map(v=>+(v-1.2).toFixed(1));
+  const data={
+    labels:sliceSeries(MONTHS12),
+    datasets:[
+      {label:'Churn Rate',data:sliceSeries(main),borderColor:'var(--red)',backgroundColor:'rgba(248,113,113,0.08)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:5,borderWidth:2},
+      {label:'Target',    data:sliceSeries(target),borderColor:'rgba(52,211,153,0.5)',backgroundColor:'transparent',fill:false,tension:.4,pointRadius:0,borderDash:[5,4],borderWidth:1.5},
+    ]
+  };
+  if(CH.churn){CH.churn.data=data;CH.churn.update();return;}
+  CH.churn=new Chart(document.getElementById('churnChart'),{type:'line',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%'}}}}});
+  document.getElementById('churn-leg').innerHTML=`<div class="li"><span class="ls" style="background:var(--red)"></span>Churn Rate</div><div class="li"><span class="ls" style="background:rgba(52,211,153,.5)"></span>Target</div>`;
+}
+
+function updateChurnTag() {
+  const arr=(F.segment==='all'?BASE.churn.all:BASE.churn[F.segment]||BASE.churn.all);
+  const sliced=sliceSeries(arr);
+  document.getElementById('churn-tag').textContent=`Avg ${(sliced.reduce((a,b)=>a+b,0)/sliced.length).toFixed(1)}%`;
+}
+
+function initDonutChart() {
+  const m={all:[48,34,18],enterprise:[65,28,7],growth:[52,33,15],starter:[38,36,26]};
+  const [active,passive,dormant]=m[F.segment]||m.all;
+  const data={labels:['Active','Passive','Dormant'],datasets:[{data:[active,passive,dormant],backgroundColor:['rgba(0,201,167,0.85)','rgba(129,140,248,0.75)','rgba(68,82,106,0.5)'],borderColor:'rgba(0,0,0,0)',borderWidth:2,hoverOffset:6}]};
+  const leg=`<div class="li"><span class="ld" style="background:var(--teal)"></span>Active ${active}%</div><div class="li"><span class="ld" style="background:var(--indigo)"></span>Passive ${passive}%</div><div class="li"><span class="ld" style="background:var(--t3)"></span>Dormant ${dormant}%</div>`;
+  if(CH.donut){CH.donut.data.datasets[0].data=[active,passive,dormant];CH.donut.update();document.getElementById('donut-leg').innerHTML=leg;return;}
+  CH.donut=new Chart(document.getElementById('donutChart'),{type:'doughnut',data,
+    options:{responsive:true,maintainAspectRatio:true,cutout:'68%',plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}}});
+  document.getElementById('donut-leg').innerHTML=leg;
+}
+
+function initFeatureChart() {
+  const m={all:[82,74,68,55,47,38,29],enterprise:[96,91,87,78,72,64,55],growth:[85,77,71,58,50,41,32],starter:[71,62,55,42,35,27,18]};
+  const vals=m[F.segment]||m.all;
+  const labels=['TrendPulse Analytics','MarketSense Intel','PriceSync Engine','Dashboard Builder','API Integrations','Alerts & Triggers','Team Workspace'];
+  const data={labels,datasets:[{data:vals,backgroundColor:['rgba(0,201,167,.75)','rgba(0,201,167,.65)','rgba(0,201,167,.55)','rgba(129,140,248,.65)','rgba(129,140,248,.55)','rgba(251,191,36,.55)','rgba(251,191,36,.45)'],borderRadius:4,borderWidth:0}]};
+  if(CH.feature){CH.feature.data.datasets[0].data=vals;CH.feature.update();return;}
+  CH.feature=new Chart(document.getElementById('featureChart'),{type:'bar',data,
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` Adoption: ${c.parsed.x}%`}}},
+      scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%'},max:100},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+}
+
+function initSessionChart() {
+  const labels=sliceSeries(WEEKS12);
+  const e=sliceSeries(BASE.session.enterprise);
+  const g=sliceSeries(BASE.session.growth);
+  const s=sliceSeries(BASE.session.starter);
+  const data={labels,datasets:[
+    {label:'Enterprise',data:e,backgroundColor:'rgba(129,140,248,0.8)',borderRadius:3,borderWidth:0},
+    {label:'Growth',    data:g,backgroundColor:'rgba(0,201,167,0.7)',  borderRadius:3,borderWidth:0},
+    {label:'Starter',   data:s,backgroundColor:'rgba(251,191,36,0.65)',borderRadius:3,borderWidth:0},
+  ]};
+  const all=[...e,...g,...s];
+  const avg=(all.reduce((a,b)=>a+b,0)/all.length).toFixed(1);
+  document.getElementById('session-tag').textContent=`Avg ${avg}m`;
+  if(CH.session){CH.session.data.labels=labels;CH.session.data.datasets[0].data=e;CH.session.data.datasets[1].data=g;CH.session.data.datasets[2].data=s;CH.session.update();return;}
+  CH.session=new Chart(document.getElementById('sessionChart'),{type:'bar',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}m`}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'m'}}}}});
+  document.getElementById('session-leg').innerHTML=`<div class="li"><span class="ld" style="background:var(--indigo)"></span>Enterprise</div><div class="li"><span class="ld" style="background:var(--teal)"></span>Growth</div><div class="li"><span class="ld" style="background:var(--amber)"></span>Starter</div>`;
+}
+
+function renderFunnel() {
+  const m={
+    all:       [{l:'Signed Up',p:100},{l:'Profile Complete',p:82},{l:'First Report Run',p:74},{l:'Integration Connected',p:58},{l:'Team Invited',p:47},{l:'Value Event Achieved',p:68}],
+    enterprise:[{l:'Signed Up',p:100},{l:'Profile Complete',p:94},{l:'First Report Run',p:91},{l:'Integration Connected',p:82},{l:'Team Invited',p:78},{l:'Value Event Achieved',p:85}],
+    growth:    [{l:'Signed Up',p:100},{l:'Profile Complete',p:84},{l:'First Report Run',p:76},{l:'Integration Connected',p:60},{l:'Team Invited',p:51},{l:'Value Event Achieved',p:71}],
+    starter:   [{l:'Signed Up',p:100},{l:'Profile Complete',p:72},{l:'First Report Run',p:61},{l:'Integration Connected',p:44},{l:'Team Invited',p:34},{l:'Value Event Achieved',p:59}],
+  };
+  const fd=m[F.segment]||m.all;
+  const colors=['rgba(0,201,167,.85)','rgba(0,201,167,.72)','rgba(0,201,167,.60)','rgba(129,140,248,.65)','rgba(129,140,248,.52)','rgba(52,211,153,.65)'];
+  document.getElementById('act-tag').textContent=`Activation ${fd[fd.length-1].p}%`;
+  document.getElementById('funnel-wrap').innerHTML=`<div class="funnel">${fd.map((f,i)=>{
+    const prev=i>0?fd[i-1].p:100;
+    const drop=i>0?Math.round(100-(f.p/prev*100)):0;
+    return `<div class="fstep"><span class="flbl">${f.l}</span><div class="fbar-wrap"><div class="fbar" style="width:${f.p}%;background:${colors[i]}">${f.p}%</div></div><span class="fpct" style="color:${colors[i]}">${f.p}%</span><span class="fdrop">${i>0?'-'+drop+'%':''}</span></div>`;
+  }).join('')}</div>`;
+}
+
+function initTTVChart() {
+  const m={
+    all:       {lbl:['1-5d','6-10d','11-15d','16-20d','21-30d','>30d'],vals:[8,22,31,19,13,7]},
+    enterprise:{lbl:['1-5d','6-10d','11-15d','16-20d','21-30d','>30d'],vals:[22,34,24,12,6,2]},
+    growth:    {lbl:['1-5d','6-10d','11-15d','16-20d','21-30d','>30d'],vals:[11,25,32,18,10,4]},
+    starter:   {lbl:['1-5d','6-10d','11-15d','16-20d','21-30d','>30d'],vals:[5,16,27,23,18,11]},
+  };
+  const td=m[F.segment]||m.all;
+  const data={labels:td.lbl,datasets:[{label:'Customers',data:td.vals,backgroundColor:'rgba(251,191,36,.7)',borderRadius:5,borderWidth:0}]};
+  if(CH.ttv){CH.ttv.data.datasets[0].data=td.vals;CH.ttv.update();return;}
+  CH.ttv=new Chart(document.getElementById('ttvChart'),{type:'bar',data,
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.parsed.y} customers`}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{stepSize:5}}}}});
+}
+
+function renderMilestones() {
+  const m={
+    all:       [{n:'Profile & Branding Setup',p:82,sub:'362 of 460 accounts'},{n:'First Data Integration',p:68,sub:'313 of 460 accounts'},{n:'Dashboard Customisation',p:61,sub:'281 of 460 accounts'},{n:'Team Members Invited',p:47,sub:'216 of 460 accounts'},{n:'API Key Generated',p:39,sub:'179 of 460 accounts'}],
+    enterprise:[{n:'Profile & Branding Setup',p:96,sub:'43 of 45 accounts'},{n:'First Data Integration',p:91,sub:'41 of 45 accounts'},{n:'Dashboard Customisation',p:87,sub:'39 of 45 accounts'},{n:'Team Members Invited',p:78,sub:'35 of 45 accounts'},{n:'API Key Generated',p:71,sub:'32 of 45 accounts'}],
+    growth:    [{n:'Profile & Branding Setup',p:84,sub:'108 of 128 accounts'},{n:'First Data Integration',p:71,sub:'91 of 128 accounts'},{n:'Dashboard Customisation',p:64,sub:'82 of 128 accounts'},{n:'Team Members Invited',p:51,sub:'65 of 128 accounts'},{n:'API Key Generated',p:42,sub:'54 of 128 accounts'}],
+    starter:   [{n:'Profile & Branding Setup',p:72,sub:'207 of 287 accounts'},{n:'First Data Integration',p:55,sub:'158 of 287 accounts'},{n:'Dashboard Customisation',p:47,sub:'135 of 287 accounts'},{n:'Team Members Invited',p:34,sub:'98 of 287 accounts'},{n:'API Key Generated',p:22,sub:'63 of 287 accounts'}],
+  };
+  const md=m[F.segment]||m.all;
+  const colors=['var(--teal)','var(--indigo)','var(--amber)','var(--purple)','var(--blue)'];
+  document.getElementById('milestone-wrap').innerHTML=`<div class="mlist">${md.map((mi,i)=>`
+    <div>
+      <div class="mhdr"><span class="mname">${mi.n}</span><span class="mpct" style="color:${colors[i]}">${mi.p}%</span></div>
+      <div class="mtrack"><div class="mfill" style="width:${mi.p}%;background:${colors[i]}"></div></div>
+      <div class="msub">${mi.sub}</div>
+    </div>`).join('')}</div>`;
+}
+
+function initAgeSubChart() {
+  const m={
+    all:       {starter:[45,38,28,18,11,6],growth:[12,22,28,24,18,12],enterprise:[1,2,6,14,22,32]},
+    enterprise:{starter:[2,1,0,0,0,0],    growth:[8,12,14,10,6,3],   enterprise:[4,8,18,28,38,52]},
+    growth:    {starter:[28,24,18,12,7,3], growth:[18,28,34,28,22,14],enterprise:[0,1,3,8,14,20]},
+    starter:   {starter:[68,58,44,28,16,8],growth:[8,14,18,16,12,8], enterprise:[0,0,1,2,4,6]},
+  };
+  const d=m[F.segment]||m.all;
+  const statsData={all:['11.4m','24.3%','68.2%','₦22M'],enterprise:['22.1m','—','91.1%','₦48M'],growth:['13.2m','31.7%','74.4%','₦18M'],starter:['7.8m','18.2%','58.9%','₦7M']};
+  const sv=statsData[F.segment]||statsData.all;
+  document.getElementById('age-sub-stats').innerHTML=['Avg Tenure','Upgrade Rate','Trial→Paid','Expansion Rev.'].map((l,i)=>`<div class="combo-card"><div class="combo-val">${sv[i]}</div><div class="combo-lbl">${l}</div></div>`).join('');
+  const data={labels:['0-3m','4-6m','7-12m','13-18m','19-24m','25m+'],datasets:[
+    {label:'Starter Plan',   data:d.starter,   backgroundColor:'rgba(251,191,36,0.7)',  borderRadius:4,borderWidth:0},
+    {label:'Growth Plan',    data:d.growth,    backgroundColor:'rgba(0,201,167,0.7)',   borderRadius:4,borderWidth:0},
+    {label:'Enterprise Plan',data:d.enterprise,backgroundColor:'rgba(129,140,248,0.75)',borderRadius:4,borderWidth:0},
+  ]};
+  if(CH.ageSub){CH.ageSub.data.datasets[0].data=d.starter;CH.ageSub.data.datasets[1].data=d.growth;CH.ageSub.data.datasets[2].data=d.enterprise;CH.ageSub.update();return;}
+  CH.ageSub=new Chart(document.getElementById('ageSubChart'),{type:'bar',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y} accounts`}}},
+      scales:{x:{stacked:true,grid:{display:false},title:{display:true,text:'Account Age (Months)',color:'#44526a',font:{size:10}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Accounts',color:'#44526a',font:{size:10}}}}}});
+  document.getElementById('age-sub-leg').innerHTML=`<div class="li"><span class="ld" style="background:var(--amber)"></span>Starter Plan</div><div class="li"><span class="ld" style="background:var(--teal)"></span>Growth Plan</div><div class="li"><span class="ld" style="background:var(--indigo)"></span>Enterprise Plan</div>`;
+}
+
+function initEmailChart() {
+  const seg=F.segment;
+  const opens=sliceSeries(BASE.email[seg]||BASE.email.all);
+  const clicks=sliceSeries(BASE.emailClick[seg]||BASE.emailClick.all);
+  const labels=sliceSeries(WEEKS12);
+  document.getElementById('email-tag').textContent=`Open ${(opens.reduce((a,b)=>a+b,0)/opens.length).toFixed(1)}%`;
+  const data={labels,datasets:[
+    {label:'Open Rate', data:opens, borderColor:'var(--teal)',  backgroundColor:'rgba(0,201,167,0.08)',fill:true,tension:.4,pointRadius:3,borderWidth:2},
+    {label:'Click Rate',data:clicks,borderColor:'var(--indigo)',backgroundColor:'rgba(129,140,248,0.06)',fill:true,tension:.4,pointRadius:3,borderWidth:2},
+  ]};
+  if(CH.email){CH.email.data.labels=labels;CH.email.data.datasets[0].data=opens;CH.email.data.datasets[1].data=clicks;CH.email.update();return;}
+  CH.email=new Chart(document.getElementById('emailChart'),{type:'line',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%'}}}}});
+  document.getElementById('email-leg').innerHTML=`<div class="li"><span class="ls" style="background:var(--teal)"></span>Open Rate</div><div class="li"><span class="ls" style="background:var(--indigo)"></span>Click Rate</div>`;
+}
+
+function initCTRChart() {
+  const mult={all:1,enterprise:1.35,growth:1.05,starter:.78}[F.segment]||1;
+  const labels=sliceSeries(WEEKS12);
+  const tooltip=sliceSeries(BASE.ctrTooltip).map(v=>+(v*mult).toFixed(1));
+  const banner= sliceSeries(BASE.ctrBanner).map(v=>+(v*mult).toFixed(1));
+  const modal=  sliceSeries(BASE.ctrModal).map(v=>+(v*mult).toFixed(1));
+  document.getElementById('ctr-tag').textContent=`Avg ${((tooltip.concat(banner,modal).reduce((a,b)=>a+b,0))/(tooltip.length*3)).toFixed(1)}%`;
+  const data={labels,datasets:[
+    {label:'Tooltip',data:tooltip,borderColor:'var(--teal)',  backgroundColor:'transparent',tension:.4,pointRadius:3,borderWidth:2},
+    {label:'Banner', data:banner, borderColor:'var(--amber)', backgroundColor:'transparent',tension:.4,pointRadius:3,borderWidth:2},
+    {label:'Modal',  data:modal,  borderColor:'var(--purple)',backgroundColor:'transparent',tension:.4,pointRadius:3,borderWidth:2},
+  ]};
+  if(CH.ctr){CH.ctr.data.labels=labels;CH.ctr.data.datasets.forEach((ds,i)=>ds.data=[tooltip,banner,modal][i]);CH.ctr.update();return;}
+  CH.ctr=new Chart(document.getElementById('ctrChart'),{type:'line',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{callback:v=>v+'%'}}}}});
+  document.getElementById('ctr-leg').innerHTML=`<div class="li"><span class="ls" style="background:var(--teal)"></span>Tooltip</div><div class="li"><span class="ls" style="background:var(--amber)"></span>Banner</div><div class="li"><span class="ls" style="background:var(--purple)"></span>Modal</div>`;
+}
+
+function initTicketChart() {
+  const mult={all:1,enterprise:.6,growth:.9,starter:1.3}[F.segment]||1;
+  const labels=sliceSeries(MONTHS12);
+  const hi= sliceSeries(BASE.tickets.high).map(v=>Math.round(v*mult));
+  const med=sliceSeries(BASE.tickets.medium).map(v=>Math.round(v*mult));
+  const lo= sliceSeries(BASE.tickets.low).map(v=>Math.round(v*mult));
+  document.getElementById('ticket-tag').textContent=`Total ${hi.reduce((a,b)=>a+b,0)+med.reduce((a,b)=>a+b,0)+lo.reduce((a,b)=>a+b,0)}`;
+  const data={labels,datasets:[
+    {label:'High',  data:hi, backgroundColor:'rgba(248,113,113,.75)',borderRadius:3,borderWidth:0},
+    {label:'Medium',data:med,backgroundColor:'rgba(251,191,36,.65)', borderRadius:3,borderWidth:0},
+    {label:'Low',   data:lo, backgroundColor:'rgba(52,211,153,.5)',  borderRadius:3,borderWidth:0},
+  ]};
+  if(CH.ticket){CH.ticket.data.labels=labels;CH.ticket.data.datasets.forEach((ds,i)=>ds.data=[hi,med,lo][i]);CH.ticket.update();return;}
+  CH.ticket=new Chart(document.getElementById('ticketChart'),{type:'bar',data,
+    options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT}},
+      scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'}}}}});
+  document.getElementById('ticket-leg').innerHTML=`<div class="li"><span class="ld" style="background:var(--red)"></span>High</div><div class="li"><span class="ld" style="background:var(--amber)"></span>Medium</div><div class="li"><span class="ld" style="background:var(--green)"></span>Low</div>`;
+}
+
+function renderHeatmap() {
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weeks=['W43','W44','W45','W46','W47'];
+  const base={
+    all:       [[72,85,91,88,76,32,18],[68,82,89,94,79,28,14],[75,88,95,91,82,35,20],[70,84,92,87,74,30,16],[66,80,88,90,77,26,12]],
+    enterprise:[[88,95,98,96,90,55,40],[85,93,97,99,92,48,35],[90,97,99,97,94,58,44],[87,94,98,95,89,52,38],[83,91,96,98,91,45,32]],
+    growth:    [[74,87,93,90,78,34,20],[70,84,91,96,81,30,16],[77,90,97,93,84,37,22],[72,86,94,89,76,32,18],[68,82,90,92,79,28,14]],
+    starter:   [[55,68,74,70,60,22,10],[51,64,71,76,63,18,8], [58,71,78,74,66,26,12],[53,66,75,69,58,20,9], [49,60,70,72,61,16,7]],
+  }[F.segment]||[[72,85,91,88,76,32,18],[68,82,89,94,79,28,14],[75,88,95,91,82,35,20],[70,84,92,87,74,30,16],[66,80,88,90,77,26,12]];
+  const teal='0,201,167';
+  let html=`<div class="hm-day-row"><div></div>${days.map(d=>`<div class="hm-day-lbl">${d}</div>`).join('')}</div>`;
+  html+=weeks.map((wk,wi)=>`<div class="hm-row"><div class="hm-wk-lbl">${wk}</div>${base[wi].map((v,di)=>`<div class="hm-cell" style="background:rgba(${teal},${(v/100*.8+.07).toFixed(2)})" data-tip="${wk} ${days[di]}: ${v} sessions"></div>`).join('')}</div>`).join('');
+  document.getElementById('heatmap-wrap').innerHTML=html;
+  let legHtml='';
+  [.12,.25,.42,.60,.80].forEach(op=>{legHtml+=`<div style="width:18px;height:12px;border-radius:2px;background:rgba(${teal},${op})"></div>`;});
+  document.getElementById('hm-legend').innerHTML=legHtml;
+}
+
+function initEngScoreChart() {
+  const m={all:[8,12,19,28,22,11,0],enterprise:[0,1,4,12,28,34,21],growth:[4,9,18,30,26,10,3],starter:[14,20,24,24,12,5,1]};
+  const vals=m[F.segment]||m.all;
+  const labels=['0-15','16-30','31-45','46-60','61-75','76-90','91-100'];
+  const colors=['rgba(248,113,113,.75)','rgba(248,113,113,.6)','rgba(251,191,36,.65)','rgba(251,191,36,.55)','rgba(0,201,167,.65)','rgba(0,201,167,.8)','rgba(52,211,153,.85)'];
+  const data={labels,datasets:[{label:'Accounts',data:vals,backgroundColor:colors,borderRadius:5,borderWidth:0}]};
+  if(CH.engScore){CH.engScore.data.datasets[0].data=vals;CH.engScore.update();return;}
+  CH.engScore=new Chart(document.getElementById('engScoreChart'),{type:'bar',data,
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${c.parsed.y} accounts`}}},
+      scales:{x:{grid:{display:false},title:{display:true,text:'Engagement Score',color:'#44526a',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.04)'},title:{display:true,text:'Accounts',color:'#44526a',font:{size:10}}}}}});
+}
+
+function renderRiskTable() {
+  const ALL=[
+    {name:'Dangote Retail Co.',   seg:'E',score:88,last:'3 days ago'},
+    {name:'Konga Distribution',   seg:'G',score:81,last:'6 days ago'},
+    {name:'Maris Stores Ltd',     seg:'S',score:77,last:'9 days ago'},
+    {name:'PayVerde Merchants',   seg:'G',score:74,last:'12 days ago'},
+    {name:'Sunrise FMCG Group',   seg:'S',score:71,last:'8 days ago'},
+    {name:'Abia Agro Supplies',   seg:'S',score:68,last:'14 days ago'},
+    {name:'Nile Trading Corp.',   seg:'E',score:66,last:'5 days ago'},
+    {name:'Vitafoam West Africa', seg:'G',score:65,last:'11 days ago'},
+  ];
+  const filtered={all:ALL,enterprise:ALL.filter(r=>r.seg==='E'),growth:ALL.filter(r=>r.seg==='G'),starter:ALL.filter(r=>r.seg==='S')};
+  const risks=(filtered[F.segment]||ALL).slice(0,6);
+  document.getElementById('risk-count-tag').textContent=risks.length+' accounts';
+  document.getElementById('risk-badge').textContent=risks.length+' at risk';
+  document.getElementById('risk-tbody').innerHTML=risks.map(r=>`
+    <tr>
+      <td style="color:var(--t1);font-weight:500">${r.name}</td>
+      <td><span class="sbadge s${r.seg}">${r.seg==='E'?'Enterprise':r.seg==='G'?'Growth':'Starter'}</span></td>
+      <td><span class="rscore ${r.score>=80?'rh':r.score>=70?'rm':'rl'}">${r.score}%</span></td>
+      <td>${r.last}</td>
+      <td><button class="abtn">Reach out</button></td>
+    </tr>`).join('');
+}
+
+function renderAll() {
+  const d=getKPIData();
+  const names={all:'All Segments',enterprise:'Enterprise',growth:'Growth',starter:'Starter'};
+  document.getElementById('company-tag').textContent=`TrendPulse Platform · ${d.cust} ${names[F.segment]} Accounts`;
+  renderKPIs();
+  initChurnChart(); updateChurnTag();
+  initDonutChart();
+  initFeatureChart();
+  initSessionChart();
+  renderFunnel();
+  initTTVChart();
+  renderMilestones();
+  initAgeSubChart();
+  initEmailChart();
+  initCTRChart();
+  initTicketChart();
+  renderHeatmap();
+  initEngScoreChart();
+  renderRiskTable();
+}
+
+function setupPills(id, key) {
+  document.getElementById(id).addEventListener('click',e=>{
+    const btn=e.target.closest('.pill');
+    if(!btn)return;
+    document.querySelectorAll(`#${id} .pill`).forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    F[key]=btn.dataset.val;
+    renderAll();
+  });
+}
+
+setupPills('date-pills','date');
+setupPills('seg-pills','segment');
+setupPills('cohort-pills','cohort');
+
+renderAll();
+</script>
+</body>
+</html>

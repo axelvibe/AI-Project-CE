@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axel's Habit Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F0E8;
+    --surface: #FDFAF4;
+    --surface2: #EDE8DC;
+    --ink: #1C1A14;
+    --ink2: #5C5849;
+    --ink3: #9B9589;
+    --accent: #3D6B4F;
+    --accent-light: #E4EDE7;
+    --accent2: #C45C2A;
+    --accent2-light: #F7EBE2;
+    --gold: #B8933A;
+    --gold-light: #F7F0DC;
+    --border: #DDD8CC;
+    --check-done: #3D6B4F;
+    --radius: 16px;
+    --shadow: 0 2px 12px rgba(28,26,20,0.07);
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .app-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 0 80px;
+  }
+
+  .header {
+    padding: 48px 28px 24px;
+    position: relative;
+  }
+  .header-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 6px;
+  }
+  .header-name {
+    font-family: 'Fraunces', serif;
+    font-size: 40px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .header-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-date {
+    font-size: 13px;
+    color: var(--ink3);
+    margin-top: 8px;
+    font-weight: 300;
+  }
+  .header-streak {
+    position: absolute;
+    top: 48px;
+    right: 28px;
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+  .streak-flame { font-size: 16px; }
+
+  .progress-section {
+    padding: 0 28px 28px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .progress-label span:first-child {
+    font-size: 13px;
+    color: var(--ink3);
+    font-weight: 400;
+  }
+  .progress-count {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .progress-count small {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink3);
+    font-weight: 300;
+  }
+  .progress-bar-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .habits-section {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .habit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .habit-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+    background: transparent;
+    transition: background 0.3s ease;
+  }
+  .habit-card:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+  .habit-card.done {
+    background: var(--accent-light);
+    border-color: rgba(61,107,79,0.25);
+  }
+  .habit-card.done::before {
+    background: var(--accent);
+  }
+
+  .habit-checkbox {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: white;
+  }
+  .habit-card.done .habit-checkbox {
+    background: var(--check-done);
+    border-color: var(--check-done);
+  }
+  .habit-checkbox svg {
+    width: 14px;
+    height: 14px;
+    stroke: white;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    fill: none;
+  }
+  .habit-card.done .habit-checkbox svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .habit-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .habit-card:hover .habit-icon { transform: scale(1.08); }
+
+  .habit-info { flex: 1; min-width: 0; }
+  .habit-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .habit-card.done .habit-name {
+    color: var(--accent);
+    text-decoration: line-through;
+    text-decoration-color: rgba(61,107,79,0.4);
+  }
+  .habit-sub {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 2px;
+    font-weight: 300;
+  }
+
+  .habit-time {
+    font-size: 11px;
+    color: var(--ink3);
+    font-weight: 300;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .habit-card.done .habit-time {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 11px;
+  }
+
+  @keyframes ripple {
+    0% { transform: scale(0); opacity: 0.4; }
+    100% { transform: scale(4); opacity: 0; }
+  }
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    background: var(--accent);
+    pointer-events: none;
+    animation: ripple 0.5s ease-out forwards;
+  }
+
+  .add-section {
+    padding: 28px 20px 0;
+  }
+  .add-form {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .add-form:focus-within {
+    border-color: var(--accent);
+    border-style: solid;
+  }
+  .add-form input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+  }
+  .add-form input::placeholder { color: var(--ink3); }
+  .add-form button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    transition: background 0.2s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .add-form button:hover { background: #2e5840; }
+  .add-form button:active { transform: scale(0.93); }
+
+  .all-done {
+    margin: 28px 20px 0;
+    background: var(--gold-light);
+    border: 1px solid rgba(184,147,58,0.3);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+    display: none;
+  }
+  .all-done.visible { display: block; }
+  .all-done-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .all-done-sub {
+    font-size: 13px;
+    color: var(--ink3);
+  }
+
+  .footer-reset {
+    padding: 24px 20px 0;
+    text-align: center;
+  }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="app-wrap">
+  <header class="header">
+    <div class="header-label">Daily Rituals</div>
+    <h1 class="header-name">Hey, <em>Axel</em> 👋</h1>
+    <div class="header-date" id="date-display"></div>
+    <div class="header-streak">
+      <span class="streak-flame">🔥</span>
+      <span id="streak-count">0</span> day streak
+    </div>
+  </header>
+
+  <section class="progress-section">
+    <div class="progress-label">
+      <span>Today's progress</span>
+      <span class="progress-count"><span id="done-count">0</span><small> / <span id="total-count">0</span></small></span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </section>
+
+  <section class="habits-section" id="habits-list"></section>
+
+  <div class="all-done" id="all-done-banner">
+    <div class="all-done-title">All done, Axel! 🎉</div>
+    <div class="all-done-sub">You crushed every habit today. Keep the streak alive.</div>
+  </div>
+
+  <section class="add-section">
+    <div class="add-form">
+      <input type="text" id="new-habit-input" placeholder="Add a new habit…" maxlength="60">
+      <button id="add-btn" title="Add habit">+</button>
+    </div>
+  </section>
+
+  <div class="footer-reset">
+    <button class="reset-btn" id="reset-btn">Reset today's progress</button>
+  </div>
+</div>
+
+<script>
+const DEFAULT_HABITS = [
+  { id: 1, name: 'Drink water', sub: 'Stay hydrated all day', icon: '💧', color: '#E6F3FB', done: false },
+  { id: 2, name: 'Gym', sub: 'Move your body', icon: '🏋️', color: '#E4EDE7', done: false },
+  { id: 3, name: 'After meal walk', sub: 'Digest & reset', icon: '🚶', color: '#F7EBE2', done: false },
+  { id: 4, name: 'Daily prayer', sub: 'Reflect & be grateful', icon: '🤲', color: '#F7F0DC', done: false },
+];
+
+const TODAY = new Date().toDateString();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('axel_habits');
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data.date !== TODAY) {
+      const resetHabits = data.habits.map(h => ({ ...h, done: false }));
+      const newData = { date: TODAY, habits: resetHabits, streak: updateStreak(data) };
+      saveState(newData);
+      return newData;
+    }
+    return data;
+  } catch { return null; }
+}
+
+function updateStreak(data) {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const wasYesterday = data.date === yesterday.toDateString();
+  const allDone = data.habits.every(h => h.done);
+  if (allDone && wasYesterday) return (data.streak || 0) + 1;
+  if (!wasYesterday) return 0;
+  return data.streak || 0;
+}
+
+function saveState(data) {
+  localStorage.setItem('axel_habits', JSON.stringify(data));
+}
+
+function getState() {
+  const loaded = loadState();
+  if (loaded) return loaded;
+  const init = { date: TODAY, habits: DEFAULT_HABITS, streak: 0 };
+  saveState(init);
+  return init;
+}
+
+let state = getState();
+
+function formatDate() {
+  return new Date().toLocaleDateString('en-IE', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function render() {
+  document.getElementById('date-display').textContent = formatDate();
+  document.getElementById('streak-count').textContent = state.streak;
+
+  const list = document.getElementById('habits-list');
+  list.innerHTML = '';
+
+  const doneCount = state.habits.filter(h => h.done).length;
+  const total = state.habits.length;
+
+  document.getElementById('done-count').textContent = doneCount;
+  document.getElementById('total-count').textContent = total;
+  const pct = total ? Math.round((doneCount / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const allDone = document.getElementById('all-done-banner');
+  if (doneCount === total && total > 0) {
+    allDone.classList.add('visible');
+  } else {
+    allDone.classList.remove('visible');
+  }
+
+  state.habits.forEach(habit => {
+    const card = document.createElement('div');
+    card.className = 'habit-card' + (habit.done ? ' done' : '');
+    card.dataset.id = habit.id;
+
+    const doneTimeStr = habit.doneAt ? formatTime(habit.doneAt) : '';
+
+    card.innerHTML = `
+      <div class="habit-checkbox">
+        <svg viewBox="0 0 14 14"><polyline points="2,7 5.5,11 12,3"/></svg>
+      </div>
+      <div class="habit-icon" style="background:${habit.color}">${habit.icon}</div>
+      <div class="habit-info">
+        <div class="habit-name">${escapeHtml(habit.name)}</div>
+        <div class="habit-sub">${escapeHtml(habit.sub)}</div>
+      </div>
+      <div class="habit-time">${habit.done ? '✓ ' + doneTimeStr : ''}</div>
+    `;
+
+    card.addEventListener('click', (e) => toggleHabit(habit.id, e));
+    list.appendChild(card);
+  });
+}
+
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function toggleHabit(id, e) {
+  const habit = state.habits.find(h => h.id === id);
+  if (!habit) return;
+  habit.done = !habit.done;
+  habit.doneAt = habit.done ? Date.now() : null;
+
+  const allPrevDone = state.habits.filter(h => h.id !== id).every(h => h.done);
+  if (habit.done && allPrevDone) {
+    state.streak = (state.streak || 0) + 1;
+    setTimeout(launchConfetti, 200);
+  }
+
+  if (e) createRipple(e);
+  saveState(state);
+  render();
+}
+
+function createRipple(e) {
+  const card = e.currentTarget;
+  const rect = card.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.left = (e.clientX - rect.left - 20) + 'px';
+  ripple.style.top = (e.clientY - rect.top - 20) + 'px';
+  card.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+}
+
+document.getElementById('add-btn').addEventListener('click', addHabit);
+document.getElementById('new-habit-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addHabit();
+});
+
+const ICONS = ['⭐','📖','🧘','🎯','🏃','🍎','😴','✍️','🎸','🌿'];
+const COLORS = ['#E6F3FB','#E4EDE7','#F7EBE2','#F7F0DC','#FAE8F0','#EDE8FB'];
+
+function addHabit() {
+  const input = document.getElementById('new-habit-input');
+  const name = input.value.trim();
+  if (!name) return;
+  const newId = Date.now();
+  state.habits.push({
+    id: newId,
+    name,
+    sub: 'Custom habit',
+    icon: ICONS[Math.floor(Math.random() * ICONS.length)],
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    done: false,
+  });
+  saveState(state);
+  input.value = '';
+  render();
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  state.habits = state.habits.map(h => ({ ...h, done: false, doneAt: null }));
+  saveState(state);
+  render();
+});
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = Array.from({ length: 80 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height * 0.5,
+    w: 6 + Math.random() * 8,
+    h: 8 + Math.random() * 6,
+    rot: Math.random() * 360,
+    rotV: (Math.random() - 0.5) * 8,
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2 + Math.random() * 4,
+    color: ['#3D6B4F','#B8933A','#C45C2A','#7BB8A0','#E8C567'][Math.floor(Math.random()*5)],
+  }));
+
+  let frame = 0;
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rotV;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, 1 - frame / 120);
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 130) requestAnimationFrame(loop);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  loop();
+}
+
+render();
+</script>
+</body>
+</html>

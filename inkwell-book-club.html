@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inkwell Book Club — Your Next Chapter Starts Here</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #1A1A2E;
+      --cream: #F5F0E8;
+      --gold: #C9A84C;
+      --copper: #B87333;
+      --warm-white: #FFFAF5;
+      --text: #2D2D3A;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-family: 'Merriweather', Georgia, serif; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--ink) 0%, #2A2A4E 100%);
+      color: var(--cream);
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(201, 168, 76, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(184, 115, 51, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 1rem 2.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn:hover { background: #D4B85A; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      margin-left: 0.75rem;
+    }
+    .btn-outline:hover { background: rgba(201, 168, 76, 0.1); }
+
+    /* Countdown */
+    .countdown-bar {
+      background: rgba(201, 168, 76, 0.1);
+      padding: 0.75rem 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--gold);
+      border-top: 1px solid rgba(201, 168, 76, 0.2);
+    }
+    .countdown-bar strong { font-size: 1rem; }
+
+    /* Sections */
+    section { padding: 3.5rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      text-align: center;
+      font-size: 1.75rem;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+
+    /* Value Props */
+    .props-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .prop-card {
+      background: var(--warm-white);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(26, 26, 46, 0.06);
+      transition: transform 0.2s;
+    }
+    .prop-card:hover { transform: translateY(-3px); }
+    .prop-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .prop-card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--ink); }
+    .prop-card p { font-size: 0.9rem; color: #666; line-height: 1.5; }
+
+    /* Form */
+    .form-section {
+      background: var(--warm-white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 560px;
+      margin: 0 auto;
+      border: 1px solid rgba(26, 26, 46, 0.08);
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      color: var(--ink);
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: white;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+    }
+    .form-group select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+    .form-submit { width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 0.5rem; }
+    .form-note { text-align: center; font-size: 0.8rem; color: #999; margin-top: 1rem; }
+    .form-success { display: none; text-align: center; padding: 2rem; }
+    .form-success h3 { color: var(--gold); margin-bottom: 0.5rem; }
+    .form-success p { color: #666; }
+
+    /* How it works */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      counter-reset: step;
+    }
+    .step {
+      text-align: center;
+      counter-increment: step;
+    }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 0 auto 1rem;
+    }
+    .step h3 { font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--ink); }
+    .step p { font-size: 0.9rem; color: #666; }
+
+    /* Footer */
+    footer {
+      background: var(--ink);
+      color: var(--cream);
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      margin-top: 2rem;
+    }
+    footer p { opacity: 0.7; font-size: 0.85rem; margin-top: 0.5rem; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero { padding: 3rem 1.25rem 2rem; }
+      section { padding: 2.5rem 1.25rem; }
+      .form-section { padding: 1.5rem; }
+      .btn-outline { margin-left: 0; margin-top: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Open for Christmas</div>
+    <h1>Your Next Chapter<br><span>Starts at Inkwell</span></h1>
+    <p>Join the Inkwell Book Club. Free hot drink on us, a €100 Christmas book bundle to win, and a digital stamp card to replace that paper one.</p>
+    <a href="#join" class="btn">Join the Book Club</a>
+    <a href="#how-it-works" class="btn btn-outline">How It Works</a>
+  </div>
+</header>
+
+<div class="countdown-bar" id="countdown">
+  Loading Christmas countdown...
+</div>
+
+<section id="join">
+  <h2 class="section-title">Join the Book Club</h2>
+  <p class="section-sub">It takes 10 seconds. Your next free book is waiting.</p>
+  <div class="form-section">
+    <form id="signup-form">
+      <div class="form-group">
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" placeholder="e.g. Aoife" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="aoife@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="genre">Favourite genre</label>
+        <select id="genre" name="genre" required>
+          <option value="">Pick one...</option>
+          <option value="fiction">Fiction</option>
+          <option value="non-fiction">Non-Fiction</option>
+          <option value="romance">Romance</option>
+          <option value="thriller">Thriller</option>
+          <option value="scifi-fantasy">Sci-Fi &amp; Fantasy</option>
+          <option value="young-adult">Young Adult</option>
+          <option value="classics">Classics</option>
+          <option value="all">All of the above!</option>
+        </select>
+      </div>
+      <button type="submit" class="btn form-submit">Send me my Book Club card</button>
+      <p class="form-note">Free hot drink valid at any Inkwell branch. €100 draw closes Dec 20th.</p>
+    </form>
+    <div class="form-success" id="form-success">
+      <div style="font-size: 3rem; margin-bottom: 0.5rem;">&#x1F4DA;</div>
+      <h3>Welcome to the Book Club!</h3>
+      <p>Check your inbox for your digital loyalty card and hot drink voucher. Your €100 Christmas draw entry is confirmed.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why-join">
+  <h2 class="section-title">Three reasons to join today</h2>
+  <p class="section-sub">(Besides the free hot drink and the books, obviously.)</p>
+  <div class="props-grid">
+    <div class="prop-card">
+      <span class="prop-icon">&#x2615;</span>
+      <h3>Free Hot Drink</h3>
+      <p>Sign up and get a free hot drink at any Inkwell branch. Perfect for browsing.</p>
+    </div>
+    <div class="prop-card">
+      <span class="prop-icon">&#x1F3B5;</span>
+      <h3>€100 Christmas Draw</h3>
+      <p>Every signup enters you into our Christmas book bundle draw. 9 winners — one per branch.</p>
+    </div>
+    <div class="prop-card">
+      <span class="prop-icon">&#x1F4CB;</span>
+      <h3>Digital Stamp Card</h3>
+      <p>That paper card in your wallet? Replaced. Scan your phone, earn stamps, get a free book.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <h2 class="section-title">How it works</h2>
+  <p class="section-sub">Three steps to your next favourite book.</p>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Sign up</h3>
+      <p>Enter your name, email, and favourite genre. Takes 10 seconds.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Read &amp; collect</h3>
+      <p>Scan your digital card every time you buy. Earn a stamp per book.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Get rewarded</h3>
+      <p>Buy 10 books, get one free. Plus members-only events and first access to signings.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h3 style="font-family: 'Merriweather', serif; color: var(--gold); font-size: 1.2rem;">Inkwell Bookshops</h3>
+  <p>9 branches. One community. Your next chapter starts here.</p>
+  <p style="margin-top: 1.5rem; opacity: 0.5;">&copy; 2026 Inkwell Bookshops</p>
+</footer>
+
+<script>
+  // Christmas countdown
+  function updateCountdown() {
+    const now = new Date();
+    const christmas = new Date(now.getFullYear(), 11, 25);
+    if (now > christmas) christmas.setFullYear(christmas.getFullYear() + 1);
+    const diff = christmas - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    document.getElementById('countdown').innerHTML = `<strong>${days} days ${hours}h ${minutes}m</strong> until Christmas — join the Book Club today`;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // Form handler
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const data = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      genre: document.getElementById('genre').value,
+      timestamp: new Date().toISOString(),
+      source: 'inkwell-book-club-landing'
+    };
+    console.log('Inkwell signup:', JSON.stringify(data, null, 2));
+    this.style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

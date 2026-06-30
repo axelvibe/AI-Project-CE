@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hello World — Axel</title>
+<style>
+  body { margin:0; height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:30px;
+    background:linear-gradient(135deg,#1F2A44,#3a5a8c); font-family:Arial,sans-serif; }
+  h1 { color:#fff; font-size:3.5rem; margin:0;
+    transition:transform .6s ease, color .6s ease; }
+  h1.bounce { animation:bounce 1s ease; color:#FFD166; }
+  @keyframes bounce {
+    0%   { transform:translateY(0)    rotate(0); }
+    25%  { transform:translateY(-40px) rotate(-5deg); }
+    50%  { transform:translateY(0)    rotate(5deg); }
+    75%  { transform:translateY(-20px) rotate(-2deg); }
+    100% { transform:translateY(0)    rotate(0); }
+  }
+  button { padding:14px 32px; font-size:1.1rem; font-weight:bold;
+    color:#1F2A44; background:#FFD166; border:none; border-radius:30px;
+    cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
+    box-shadow:0 4px 12px rgba(0,0,0,.25); }
+  button:hover { transform:scale(1.08); box-shadow:0 6px 18px rgba(0,0,0,.35); }
+  button:active { transform:scale(.95); }
+  p { color:#cfd8e6; font-size:.95rem; margin:0; }
+</style>
+</head>
+<body>
+  <h1 id="greeting">Hello, World!</h1>
+  <button onclick="wave()">Wave at me 👋</button>
+  <p id="counter">Click the button to make me move.</p>
+<script>
+  let clicks = 0;
+  function wave() {
+    const h = document.getElementById('greeting');
+    h.classList.remove('bounce');
+    void h.offsetWidth;          // reset animation
+    h.classList.add('bounce');
+    clicks++;
+    document.getElementById('counter').textContent =
+      `You've waved ${clicks} time${clicks === 1 ? '' : 's'}.`;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Axel Ilenre — AI & Project Management Professional</title>
+
+<!-- Open Graph -->
+<meta property="og:title" content="Axel Ilenre — AI & Project Management Professional">
+<meta property="og:description" content="AI-literate project and operations professional pairing responsible-AI governance with hands-on compliance and delivery across government, consulting, and technology settings.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://axelilenre.github.io/">
+<!-- Add og:image later: 1200x630 PNG matching dark theme -->
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Axel Ilenre — AI & Project Management Professional">
+<meta name="twitter:description" content="AI-literate project and operations professional pairing responsible-AI governance with hands-on compliance and delivery across government, consulting, and technology settings.">
+
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+  // Apply saved theme before first paint to avoid flash
+  (function() {
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light') document.documentElement.classList.add('light');
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  :root {
+    --bg: #020a18;
+    --bg-grad: linear-gradient(170deg, #020a18 0%, #041028 40%, #06142e 70%, #020a18 100%);
+    --surface: rgba(8,24,56,0.85);
+    --border: rgba(0,170,255,0.12);
+    --border-glow: rgba(0,170,255,0.3);
+    --text: #d0e0f0;
+    --text-bright: #e8f0ff;
+    --text-dim: #6888aa;
+    --neon: #00aaff;
+    --cyan: #00e5ff;
+    --green: #00ff88;
+    --amber: #ffaa00;
+    --red: #ff4466;
+    --purple: #aa66ff;
+    --header-bg: rgba(4,14,34,0.7);
+    --orb1: rgba(0,170,255,0.08);
+    --orb2: rgba(170,102,255,0.08);
+    --orb3: rgba(0,229,255,0.08);
+    --grid: rgba(0,170,255,1);
+  }
+
+  html.light {
+    --bg: #eef3fa;
+    --bg-grad: linear-gradient(170deg, #eef3fa 0%, #e2ecf7 40%, #dbe8f5 70%, #eef3fa 100%);
+    --surface: rgba(255,255,255,0.85);
+    --border: rgba(0,90,160,0.18);
+    --border-glow: rgba(0,120,200,0.4);
+    --text: #2a3f55;
+    --text-bright: #0e2238;
+    --text-dim: #5a7088;
+    --neon: #0072c6;
+    --cyan: #008bb0;
+    --green: #009955;
+    --amber: #cc7a00;
+    --red: #cc3050;
+    --purple: #7d3fcc;
+    --header-bg: rgba(255,255,255,0.75);
+    --orb1: rgba(0,114,198,0.10);
+    --orb2: rgba(125,63,204,0.10);
+    --orb3: rgba(0,139,176,0.10);
+    --grid: rgba(0,90,160,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* Background layers */
+  .bg-gradient {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-grad);
+    z-index: -4;
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.03;
+    z-index: -3;
+  }
+
+  .orbs {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 1;
+  }
+
+  .orb-1 {
+    width: 420px; height: 420px;
+    background: var(--orb1);
+    top: -120px; left: -180px;
+    animation: orbit1 32s ease-in-out infinite;
+  }
+
+  .orb-2 {
+    width: 480px; height: 480px;
+    background: var(--orb2);
+    top: 40%; right: -220px;
+    animation: orbit2 38s ease-in-out infinite;
+  }
+
+  .orb-3 {
+    width: 380px; height: 380px;
+    background: var(--orb3);
+    bottom: -160px; left: -140px;
+    animation: orbit3 44s ease-in-out infinite;
+  }
+
+  @keyframes orbit1 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(60px, 80px); }
+  }
+  @keyframes orbit2 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(-70px, -60px); }
+  }
+  @keyframes orbit3 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(50px, -70px); }
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text-bright);
+    letter-spacing: 0.3px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--border-glow);
+    color: var(--neon);
+    box-shadow: 0 0 12px var(--orb1);
+  }
+
+  .icon-btn svg { width: 18px; height: 18px; }
+
+  /* Content */
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 60px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 7vw, 4rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+  }
+
+  .hero .role {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 600;
+    color: var(--neon);
+    margin-bottom: 28px;
+    letter-spacing: 0.2px;
+  }
+
+  .hero .statement {
+    font-size: clamp(1.25rem, 3.2vw, 1.75rem);
+    font-weight: 500;
+    color: var(--text-bright);
+    line-height: 1.4;
+    max-width: 720px;
+    margin-bottom: 36px;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--neon), var(--cyan));
+    color: #021018;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.28s ease;
+    box-shadow: 0 4px 24px var(--orb1);
+  }
+
+  .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--border-glow);
+    color: #021018;
+  }
+
+  /* Links */
+  a { color: var(--neon); text-decoration: none; transition: all 0.2s ease; }
+  a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--orb3); }
+
+  /* Sections */
+  .sections { padding-bottom: 40px; }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .section:hover { border-color: var(--border-glow); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 22px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text-bright);
+    font-family: inherit;
+  }
+
+  .section-num {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--neon);
+    color: var(--neon);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    flex: 1;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .section-toggle {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    line-height: 1;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .section.open .section-toggle { color: var(--neon); }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 24px;
+  }
+
+  .section.open .section-body {
+    max-height: 1200px;
+    padding: 0 24px 26px 24px;
+  }
+
+  .section-body p { margin-bottom: 14px; color: var(--text); }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  .section-body ul { list-style: none; margin: 6px 0; }
+
+  .section-body li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .section-body li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: var(--neon);
+    font-weight: 700;
+  }
+
+  .section-body li:last-child { margin-bottom: 0; }
+
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .tag {
+    padding: 7px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .sub-label {
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .cert-line { margin-bottom: 18px; }
+  .cert-line:last-child { margin-bottom: 0; }
+
+  .edu-item { margin-bottom: 18px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-item .degree { font-weight: 600; color: var(--text-bright); }
+  .edu-item .inst { color: var(--text-dim); font-size: 0.92rem; }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .contact-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  .contact-links a:hover {
+    border-color: var(--border-glow);
+    box-shadow: 0 0 12px var(--orb1);
+  }
+
+  .inferred {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 50px 20px 40px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer .footer-name { color: var(--text); font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 56px 0 44px; }
+    .section-header { padding: 18px 18px; gap: 12px; }
+    .section.open .section-body { padding: 0 18px 22px 18px; }
+    .section-body { padding: 0 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="bg-grid"></div>
+<div class="orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">Axel Ilenre</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" title="Toggle light / dark mode" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+      <button class="icon-btn" id="collapseToggle" title="Collapse / expand all sections" aria-label="Collapse or expand all sections">
+        <svg id="iconCollapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 14 10 14 10 20"></polyline>
+          <polyline points="20 10 14 10 14 4"></polyline>
+          <line x1="14" y1="10" x2="21" y2="3"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+        <svg id="iconExpand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line x1="21" y1="3" x2="14" y2="10"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <section class="hero">
+    <h1>Axel Ilenre</h1>
+    <div class="role">AI &amp; Project Management Professional — AI Operations / Risk Analyst, Project Assistant</div>
+    <div class="statement">I bring AI governance and project delivery together to make operations measurably more accurate, compliant, and efficient.</div>
+    <a class="cta" href="#contact">
+      Get in touch
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </section>
+
+  <div class="sections">
+
+    <div class="section open">
+      <button class="section-header" aria-expanded="true">
+        <span class="section-num">1</span>
+        <span class="section-title">About</span>
+        <span class="section-toggle">−</span>
+      </button>
+      <div class="section-body">
+        <p>I'm an AI-literate project and operations professional who pairs responsible-AI governance with hands-on compliance and delivery experience across government, consulting, and technology settings.</p>
+        <p>I'm currently completing an MSc in Artificial Intelligence for Business at the National College of Ireland, building on an MBA in Project Management. My work spans the AI/ML lifecycle, model governance, risk register management, and regulatory compliance (GDPR and the EU AI Act), alongside Agile and Waterfall project coordination. <span class="inferred">[inferred from CV]</span></p>
+      </div>
+    </div>
+
+    <div class="section open">
+      <button class="section-header" aria-expanded="true">
+        <span class="section-num">2</span>
+        <span class="section-title">Signature Work</span>
+        <span class="section-toggle">−</span>
+      </button>
+      <div class="section-body">
+        <ul>
+          <li>Implemented virtual monitoring and biometric verification systems at the Nigeria Immigration Service, contributing to a 38% reduction in irregular migration at the Seme border post.</li>
+          <li>Maintained 100% data accuracy and a 0% error rate across all shifts at Nnamdi Azikiwe International Airport in a high-volume, zero-tolerance compliance environment.</li>
+          <li>Reduced complaint resolution turnaround by 70% at Nuhuaisien and Associates through end-to-end process redesign and structured escalation workflows.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section open">
+      <button class="section-header" aria-expanded="true">
+        <span class="section-num">3</span>
+        <span class="section-title">Skills &amp; Certifications</span>
+        <span class="section-toggle">−</span>
+      </button>
+      <div class="section-body">
+        <div class="cert-line">
+          <span class="sub-label">Certifications</span>
+          <div class="tag-grid">
+            <span class="tag">PMP — Project Management Professional</span>
+            <span class="tag">PRINCE2 Foundation &amp; Practitioner</span>
+            <span class="tag">PSM I — Professional Scrum Master</span>
+          </div>
+        </div>
+        <div class="cert-line">
+          <span class="sub-label">In Progress</span>
+          <div class="tag-grid">
+            <span class="tag">CompTIA AI+</span>
+            <span class="tag">ISO 31000 Risk Management Foundation</span>
+            <span class="tag">Google Project Management Certificate</span>
+          </div>
+        </div>
+        <div class="cert-line">
+          <span class="sub-label">Core Skills</span>
+          <div class="tag-grid">
+            <span class="tag">AI Lifecycle Management</span>
+            <span class="tag">Model Governance &amp; Responsible AI</span>
+            <span class="tag">AI Bias Identification &amp; Ethics</span>
+            <span class="tag">Risk Assessment &amp; Mitigation</span>
+            <span class="tag">Risk Register Management</span>
+            <span class="tag">Compliance Monitoring &amp; Governance</span>
+            <span class="tag">Regulatory Compliance (GDPR / EU AI Act)</span>
+            <span class="tag">Project Coordination (Agile / Waterfall)</span>
+            <span class="tag">Sprint Planning &amp; Scrum</span>
+            <span class="tag">Stakeholder Engagement &amp; Reporting</span>
+            <span class="tag">Data Analysis &amp; KPI Development</span>
+            <span class="tag">Prompt Engineering</span>
+          </div>
+        </div>
+        <div class="cert-line">
+          <span class="sub-label">Tools &amp; Technologies</span>
+          <div class="tag-grid">
+            <span class="tag">Jira</span>
+            <span class="tag">Confluence</span>
+            <span class="tag">MS Project</span>
+            <span class="tag">Monday.com</span>
+            <span class="tag">Tableau</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Excel</span>
+            <span class="tag">RapidMiner AI Studio</span>
+            <span class="tag">GitHub</span>
+            <span class="tag">Microsoft 365</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section open">
+      <button class="section-header" aria-expanded="true">
+        <span class="section-num">4</span>
+        <span class="section-title">Education</span>
+        <span class="section-toggle">−</span>
+      </button>
+      <div class="section-body">
+        <div class="edu-item">
+          <div class="degree">MSc Artificial Intelligence for Business</div>
+          <div class="inst">National College of Ireland, Dublin · Jan 2026 – Present</div>
+        </div>
+        <div class="edu-item">
+          <div class="degree">Master of Business Administration (Project Management)</div>
+          <div class="inst">Turkish Nile University · Apr 2022 – Nov 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section open" id="contact">
+      <button class="section-header" aria-expanded="true">
+        <span class="section-num">5</span>
+        <span class="section-title">Contact</span>
+        <span class="section-toggle">−</span>
+      </button>
+      <div class="section-body">
+        <p>Open to roles in AI operations, AI risk, and project coordination. Get in touch — I'd be glad to discuss how I can help.</p>
+        <div class="contact-links">
+          <a href="mailto:axelilenre@gmail.com">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            axelilenre@gmail.com
+          </a>
+          <a href="tel:+353870043191">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            +353 87 004 3191
+          </a>
+          <a href="https://linkedin.com/in/axelilenre" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            linkedin.com/in/axelilenre
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-name">Axel Ilenre</span> · <span id="year"></span> · Built with the AI Badge
+</footer>
+
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Theme toggle
+  var themeToggle = document.getElementById('themeToggle');
+  var iconMoon = document.getElementById('iconMoon');
+  var iconSun = document.getElementById('iconSun');
+
+  function syncThemeIcons() {
+    var isLight = document.documentElement.classList.contains('light');
+    iconSun.style.display = isLight ? 'block' : 'none';
+    iconMoon.style.display = isLight ? 'none' : 'block';
+  }
+  syncThemeIcons();
+
+  themeToggle.addEventListener('click', function() {
+    document.documentElement.classList.toggle('light');
+    var isLight = document.documentElement.classList.contains('light');
+    try { localStorage.setItem('theme', isLight ? 'light' : 'dark'); } catch (e) {}
+    syncThemeIcons();
+  });
+
+  // Section collapse / expand
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+
+  sections.forEach(function(sec) {
+    var btn = sec.querySelector('.section-header');
+    var toggle = sec.querySelector('.section-toggle');
+    btn.addEventListener('click', function() {
+      var open = sec.classList.toggle('open');
+      toggle.textContent = open ? '−' : '+';
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  // Collapse / expand all
+  var collapseToggle = document.getElementById('collapseToggle');
+  var iconCollapse = document.getElementById('iconCollapse');
+  var iconExpand = document.getElementById('iconExpand');
+
+  function anyOpen() {
+    return sections.some(function(s) { return s.classList.contains('open'); });
+  }
+
+  function syncGlobalIcon() {
+    var open = anyOpen();
+    iconCollapse.style.display = open ? 'block' : 'none';
+    iconExpand.style.display = open ? 'none' : 'block';
+  }
+  syncGlobalIcon();
+
+  collapseToggle.addEventListener('click', function() {
+    var shouldOpen = !anyOpen();
+    sections.forEach(function(sec) {
+      var toggle = sec.querySelector('.section-toggle');
+      var btn = sec.querySelector('.section-header');
+      if (shouldOpen) {
+        sec.classList.add('open');
+        toggle.textContent = '−';
+        btn.setAttribute('aria-expanded', 'true');
+      } else {
+        sec.classList.remove('open');
+        toggle.textContent = '+';
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    syncGlobalIcon();
+  });
+</script>
+
+</body>
+</html>

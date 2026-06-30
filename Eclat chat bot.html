@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclat Trend Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h3>Eclat Trend Immigration Assistant</h3>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat messages will be inserted here by JavaScript -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Type your message..." disabled>
+            <button id="send-button" disabled>Send</button>
+        </div>
+        <div class="quick-replies" id="quick-replies">
+            <!-- Quick reply buttons will be inserted here by JavaScript -->
+        </div>
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> This chatbot provides general information only and is not legal advice. Please consult with a qualified immigration attorney for personalized counsel.</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
++ Thought: Initiating Webpage Creation · 34ms
+# Wrote /tmp/opencode/eclat-chatbot/style.css
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 400px;
+    height: 80vh;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.chat-header {
+    background-color: #FF4500; /* Red-Orange accent */
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    border-bottom: 1px solid #eee;
+}
+
+.message {
+    margin-bottom: 10px;
+    display: flex;
+}
+
+.message.bot {
+    justify-content: flex-start;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.bot-bubble {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border-bottom-left-radius: 2px;
+    max-width: 80%;
+}
+
+.user-bubble {
+    background-color: #FFA07A; /* Lighter Red-Orange */
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border-bottom-right-radius: 2px;
+    max-width: 80%;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px 15px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input-area input {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-right: 10px;
+    outline: none;
+}
+
+.chat-input-area button {
+    background-color: #FF4500;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    outline: none;
+}
+
+.chat-input-area button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+    gap: 8px;
+    border-top: 1px solid #eee;
+}
+
+.quick-reply-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.quick-reply-button:hover {
+    background-color: #e0e0e0;
+}
+
+.disclaimer {
+    font-size: 0.75em;
+    color: #777;
+    padding: 10px 15px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .chat-container {
+        height: 100vh;
+        border-radius: 0;
+    }
+}
++ Thought: Initiating Design Elements · 44ms
+# Wrote /tmp/opencode/eclat-chatbot/data.json
+[
+    {
+        "question": "What are the requirements for a visitor visa?",
+        "answer": "Requirements for a visitor visa typically include a valid passport, proof of funds, a return ticket, and an invitation letter if applicable. Specific requirements vary by country.",
+        "keywords": ["visitor visa", "requirements", "tourist"]
+    },
+    {
+        "question": "How do I apply for a work visa?",
+        "answer": "Applying for a work visa generally requires a job offer from an employer in the destination country, relevant educational and professional documents, and sometimes a labor market impact assessment. The process is country-specific.",
+        "keywords": ["work visa", "apply", "job"]
+    },
+    {
+        "question": "What is the processing time for a student visa?",
+        "answer": "Student visa processing times vary greatly by country and the time of year. It can range from a few weeks to several months. We recommend checking the official embassy or consulate website for current estimates.",
+        "keywords": ["student visa", "processing time", "study"]
+    },
+    {
+        "question": "What documents do I need for permanent residency?",
+        "answer": "Documents for permanent residency applications are extensive and highly dependent on the country and specific immigration program. They often include identity documents, educational certificates, work experience letters, language test results, and medical/police clearances.",
+        "keywords": ["permanent residency", "documents", "PR"]
+    },
+    {
+        "question": "Can I bring my family with me?",
+        "answer": "Many visa categories allow for family reunification. The specific rules for dependent visas, including who qualifies as a dependent and the required documentation, vary by country and visa type. Please specify your visa type for more detailed information.",
+        "keywords": ["family", "dependent", "reunification"]
+    },
+    {
+        "question": "How do I check my application status?",
+        "answer": "To check your application status, you must visit the official government immigration portal of the country you applied to. You will need your application receipt number or case ID. We cannot provide real-time status updates directly.",
+        "keywords": ["application status", "check status", "track application"]
+    }
+]
++ Thought: Developing Chatbot Logic · 4.7s
+# Wrote /tmp/opencode/eclat-chatbot/script.js
+document.addEventListener('DOMContentLoaded', () => {
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const quickRepliesContainer = document.getElementById('quick-replies');
+
+    let faqs = [];
+
+    // Load FAQs from data.json
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            faqs = data;
+            console.log('FAQs loaded:', faqs);
+            // Enable input and send button after FAQs are loaded
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            // Initial greeting
+            displayBotMessage("Hello! I'm the Eclat Trend Immigration Assistant. I can help you with general immigration FAQs, guide you on how to check your application status, or connect you to human support. Please remember, I provide general information only and not legal advice.");
+            showQuickReplies(['Check Application Status', 'General FAQs', 'Contact Support']);
+        })
+        .catch(error => console.error('Error loading FAQs:', error));
+
+    function displayMessage(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);
+        const bubbleElement = document.createElement('div');
+        bubbleElement.classList.add(sender === 'bot' ? 'bot-bubble' : 'user-bubble');
+        bubbleElement.innerHTML = message;
+        messageElement.appendChild(bubbleElement);
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+    }
+
+    function displayBotMessage(message) {
+        displayMessage(message, 'bot');
+    }
+
+    function displayUserMessage(message) {
+        displayMessage(message, 'user');
+    }
+
+    function showQuickReplies(replies) {
+        quickRepliesContainer.innerHTML = ''; // Clear previous replies
+        replies.forEach(reply => {
+            const button = document.createElement('button');
+            button.classList.add('quick-reply-button');
+            button.textContent = reply;
+            button.addEventListener('click', () => handleUserInput(reply));
+            quickRepliesContainer.appendChild(button);
+        });
+    }
+
+    function handleUserInput(input) {
+        displayUserMessage(input);
+        userInput.value = ''; // Clear input field
+        quickRepliesContainer.innerHTML = ''; // Clear quick replies after selection
+
+        // Process bot response based on user input
+        processBotResponse(input);
+    }
+
+    function processBotResponse(input) {
+        input = input.toLowerCase().trim();
+
+        if (input === 'check application status') {
+            displayBotMessage("I can guide you on how to check your application status directly through official government portals. Please note, I cannot access personal data or provide real-time updates.<br><br>To check your status, you must visit the official government immigration portal of the country you applied to. You will need your application receipt number or case ID. Follow the instructions on their website.<br><br>For specific links or guidance, please let me know which country/region you are inquiring about.");
+            showQuickReplies(['Back to Main Menu', 'Contact Support']);
+        } else if (input === 'general faqs') {
+            displayBotMessage("What would you like to know about immigration processes? You can type your question or choose a topic below.");
+            showQuickReplies(faqs.map(faq => faq.question).concat(['Back to Main Menu', 'Contact Support']));
+        } else if (input === 'contact support') {
+            displayBotMessage("If you need personalized assistance or legal advice, please reach out to our team directly. We're here to help!<br><br>You can email us at: <a href=\"mailto:support@eclattrend.com\">support@eclattrend.com</a><br>Or fill out our contact form: <a href=\"#\" target=\"_blank\">Eclat Trend Contact Form</a>"); // Placeholder for actual link
+            showQuickReplies(['Back to Main Menu']);
+        } else if (input === 'back to main menu') {
+            displayBotMessage("How else can I assist you?");
+            showQuickReplies(['Check Application Status', 'General FAQs', 'Contact Support']);
+        } else {
+            // Try to find an FAQ match
+            const foundFaq = faqs.find(faq => 
+                faq.question.toLowerCase().includes(input) || 
+                faq.keywords.some(keyword => input.includes(keyword.toLowerCase()))
+            );
+
+            if (foundFaq) {
+                displayBotMessage(foundFaq.answer);
+                showQuickReplies(['Ask another FAQ', 'Back to Main Menu', 'Contact Support']);
+            } else {
+                displayBotMessage("I apologize, I didn't quite understand your request. Could you please rephrase it, or would you like to try one of these options?");
+                showQuickReplies(['Check Application Status', 'General FAQs', 'Contact Support']);
+            }
+        }
+    }
+
+    // Event Listeners for input field and send button
+    sendButton.addEventListener('click', () => {
+        if (userInput.value.trim() !== '') {
+            handleUserInput(userInput.value.trim());
+        }
+    });
+
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && userInput.value.trim() !== '') {
+            handleUserInput(userInput.value.trim());
+        }
+    });
+});
